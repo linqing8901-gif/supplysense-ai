@@ -22,6 +22,7 @@ const els = {
   csvInput: document.getElementById("csvInput"),
   loadSample: document.getElementById("loadSample"),
   exportPo: document.getElementById("exportPo"),
+  copySummary: document.getElementById("copySummary"),
   riskFilter: document.getElementById("riskFilter"),
   inventoryRows: document.getElementById("inventoryRows"),
   criticalCount: document.getElementById("criticalCount"),
@@ -35,6 +36,7 @@ const els = {
   summaryDraft: document.getElementById("summaryDraft"),
   timelineChart: document.getElementById("timelineChart"),
   timelineSummary: document.getElementById("timelineSummary"),
+  statusToast: document.getElementById("statusToast"),
 };
 
 els.loadSample.addEventListener("click", async () => {
@@ -44,12 +46,14 @@ els.loadSample.addEventListener("click", async () => {
   } catch {
     loadCsv(SAMPLE_CSV);
   }
+  showToast("Sample inventory loaded");
 });
 
 els.csvInput.addEventListener("change", async (event) => {
   const [file] = event.target.files;
   if (!file) return;
   loadCsv(await file.text());
+  showToast(`${file.name} uploaded`);
 });
 
 els.riskFilter.addEventListener("change", (event) => {
@@ -59,6 +63,11 @@ els.riskFilter.addEventListener("change", (event) => {
 
 els.exportPo.addEventListener("click", () => {
   exportPurchaseOrders();
+});
+
+els.copySummary.addEventListener("click", async () => {
+  await copyText(els.summaryDraft.textContent.trim());
+  showToast("Submission summary copied");
 });
 
 function loadCsv(csvText) {
@@ -319,7 +328,10 @@ function buildSummary() {
 
 function exportPurchaseOrders() {
   const rows = state.rows.filter((row) => row.reorderQty > 0);
-  if (!rows.length) return;
+  if (!rows.length) {
+    showToast("No purchase orders needed");
+    return;
+  }
 
   const headers = [
     "sku",
@@ -358,11 +370,38 @@ function exportPurchaseOrders() {
   link.download = "supplysense-recommended-purchase-orders.csv";
   link.click();
   URL.revokeObjectURL(url);
+  showToast(`${rows.length} purchase order recommendations exported`);
 }
 
 function csvEscape(value) {
   const text = String(value ?? "");
   return /[",\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+}
+
+async function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  textarea.remove();
+}
+
+function showToast(message) {
+  els.statusToast.textContent = message;
+  els.statusToast.classList.add("visible");
+  window.clearTimeout(showToast.timeoutId);
+  showToast.timeoutId = window.setTimeout(() => {
+    els.statusToast.classList.remove("visible");
+  }, 2200);
 }
 
 function number(value) {

@@ -409,8 +409,22 @@ tbody tr.selected {
 }
 
 .summary-box h3 {
-  margin-bottom: 8px;
+  margin-bottom: 0;
   font-size: 15px;
+}
+
+.summary-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.summary-heading button {
+  min-height: 34px;
+  padding: 0 10px;
+  font-size: 12px;
 }
 
 .summary-box p {
@@ -418,6 +432,33 @@ tbody tr.selected {
   color: var(--muted);
   font-size: 14px;
   line-height: 1.55;
+}
+
+.status-toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 20;
+  max-width: min(360px, calc(100vw - 32px));
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--ink);
+  color: #fff;
+  box-shadow: var(--shadow);
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.status-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @media (max-width: 1040px) {
@@ -459,6 +500,11 @@ tbody tr.selected {
 
   .value-strip {
     grid-template-columns: 1fr;
+  }
+
+  .status-toast {
+    right: 16px;
+    bottom: 16px;
   }
 }
 

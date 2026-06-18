@@ -124,7 +124,10 @@
             Load the sample dataset to generate stockout explanations and replenishment actions.
           </div>
           <div class="summary-box">
-            <h3>Submission Summary Draft</h3>
+            <div class="summary-heading">
+              <h3>Submission Summary Draft</h3>
+              <button id="copySummary" type="button" title="Copy submission summary">Copy Summary</button>
+            </div>
             <p id="summaryDraft">
               SupplySense AI predicts SKU-level stockout risk and recommends replenishment actions using inventory, demand, supplier lead time, and open order signals.
             </p>
@@ -132,6 +135,7 @@
         </aside>
       </section>
     </main>
+    <div id="statusToast" class="status-toast" role="status" aria-live="polite"></div>
 
     <script src="src/app.js"></script>
   </body>
