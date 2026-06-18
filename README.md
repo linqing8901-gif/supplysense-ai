@@ -43,6 +43,12 @@ SupplySense AI estimates daily demand from the last 14 days of sales, calculates
 
 The app also calculates safety stock and target stock levels, then recommends a reorder quantity and estimated cash requirement. For demo clarity, the model runs fully in the browser using JavaScript and a sample CSV dataset.
 
+## Model Assumptions
+
+The current demo uses synthetic inventory and supplier-risk data designed to simulate realistic supply chain planning scenarios. The scoring model is an interpretable heuristic based on common inventory planning concepts, including days of cover, lead time, safety stock, reorder quantity, and supplier reliability.
+
+The `Critical`, `High`, `Watch`, and `Stable` thresholds are configurable demo assumptions, not fixed industry standards. In a production deployment, these thresholds would be calibrated using historical demand, supplier performance, target service levels, and business risk tolerance.
+
 ## Tech Stack
 
 - HTML
