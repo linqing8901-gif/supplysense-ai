@@ -48,36 +48,50 @@
       </section>
 
       <section class="workspace">
-        <div class="table-panel">
-          <div class="panel-heading">
-            <div>
-              <h2>Priority Queue</h2>
-              <p>Sorted by stockout risk and replenishment urgency.</p>
+        <div class="main-column">
+          <div class="table-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Priority Queue</h2>
+                <p>Sorted by stockout risk and replenishment urgency.</p>
+              </div>
+              <select id="riskFilter" aria-label="Risk filter">
+                <option value="all">All risk levels</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Watch">Watch</option>
+                <option value="Stable">Stable</option>
+              </select>
             </div>
-            <select id="riskFilter" aria-label="Risk filter">
-              <option value="all">All risk levels</option>
-              <option value="Critical">Critical</option>
-              <option value="High">High</option>
-              <option value="Watch">Watch</option>
-              <option value="Stable">Stable</option>
-            </select>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>SKU</th>
+                    <th>Item</th>
+                    <th>Risk</th>
+                    <th>Days Cover</th>
+                    <th>Lead Time</th>
+                    <th>Supplier Risk</th>
+                    <th>Reorder Qty</th>
+                    <th>Cash Need</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryRows"></tbody>
+              </table>
+            </div>
           </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>SKU</th>
-                  <th>Item</th>
-                  <th>Risk</th>
-                  <th>Days Cover</th>
-                  <th>Lead Time</th>
-                  <th>Supplier Risk</th>
-                  <th>Reorder Qty</th>
-                  <th>Cash Need</th>
-                </tr>
-              </thead>
-              <tbody id="inventoryRows"></tbody>
-            </table>
+
+          <div class="timeline-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Stockout Timeline</h2>
+                <p id="timelineSummary">Select a SKU to compare projected inventory against replenishment timing.</p>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <svg id="timelineChart" viewBox="0 0 760 260" role="img" aria-label="Projected inventory timeline"></svg>
+            </div>
           </div>
         </div>
 

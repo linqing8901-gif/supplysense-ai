@@ -149,7 +149,14 @@ select {
   align-items: start;
 }
 
+.main-column {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
 .table-panel,
+.timeline-panel,
 .insight-panel {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -268,6 +275,66 @@ tbody tr.selected {
 .supplier-Low {
   color: var(--green);
   background: #edf8f1;
+}
+
+.chart-wrap {
+  padding: 18px;
+}
+
+#timelineChart {
+  display: block;
+  width: 100%;
+  min-height: 260px;
+}
+
+.chart-axis {
+  stroke: #aab6ad;
+  stroke-width: 1;
+}
+
+.chart-grid {
+  stroke: #e3e9e2;
+  stroke-width: 1;
+}
+
+.chart-line {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart-fill {
+  fill: rgba(36, 87, 166, 0.08);
+}
+
+.chart-danger {
+  fill: rgba(180, 35, 24, 0.1);
+}
+
+.chart-marker {
+  stroke: var(--amber);
+  stroke-width: 3;
+  stroke-dasharray: 6 6;
+}
+
+.chart-stockout {
+  stroke: var(--red);
+  stroke-width: 3;
+  stroke-dasharray: 4 5;
+}
+
+.chart-label {
+  fill: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.chart-callout {
+  fill: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .insight-panel {

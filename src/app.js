@@ -33,6 +33,8 @@ const els = {
   insightText: document.getElementById("insightText"),
   riskGauge: document.querySelector("#riskGauge span"),
   summaryDraft: document.getElementById("summaryDraft"),
+  timelineChart: document.getElementById("timelineChart"),
+  timelineSummary: document.getElementById("timelineSummary"),
 };
 
 els.loadSample.addEventListener("click", async () => {
@@ -175,7 +177,9 @@ function render() {
   const filteredRows = state.filter === "all" ? state.rows : state.rows.filter((row) => row.riskLevel === state.filter);
   renderMetrics();
   renderTable(filteredRows);
-  renderInsight(state.rows.find((row) => row.sku === state.selectedSku) ?? state.rows[0]);
+  const selectedRow = state.rows.find((row) => row.sku === state.selectedSku) ?? state.rows[0];
+  renderInsight(selectedRow);
+  renderTimeline(selectedRow);
 }
 
 function renderMetrics() {
@@ -219,7 +223,7 @@ function renderTable(rows) {
 function renderInsight(row) {
   if (!row) return;
 
-  els.selectedSku.textContent = `${row.sku} · ${row.name}`;
+  els.selectedSku.textContent = `${row.sku} - ${row.name}`;
   els.riskGauge.style.width = `${row.riskScore}%`;
   els.insightText.innerHTML = `
     <p><strong>${row.riskLevel} risk:</strong> ${escapeHtml(row.name)} has ${row.daysCover.toFixed(1)} days of cover against a ${row.effectiveLeadTime}-day effective lead time.</p>
@@ -233,6 +237,75 @@ function renderInsight(row) {
     <p><strong>Action:</strong> prioritize purchase approval, confirm supplier capacity with ${escapeHtml(row.supplier)}, and monitor daily demand until the order is acknowledged.</p>
   `;
   els.summaryDraft.textContent = buildSummary();
+}
+
+function renderTimeline(row) {
+  if (!row || !els.timelineChart) return;
+
+  const horizon = 30;
+  const points = buildTimelinePoints(row, horizon);
+  const maxInventory = Math.max(row.currentStock + row.onOrder + row.reorderQty, row.targetStock, ...points.map((point) => point.inventory), 1);
+  const stockoutDay = points.find((point) => point.inventory <= 0)?.day;
+  const reorderArrivalDay = row.effectiveLeadTime;
+  const width = 760;
+  const height = 260;
+  const pad = { left: 56, right: 24, top: 28, bottom: 42 };
+  const chartWidth = width - pad.left - pad.right;
+  const chartHeight = height - pad.top - pad.bottom;
+  const x = (day) => pad.left + (day / horizon) * chartWidth;
+  const y = (inventory) => pad.top + chartHeight - (Math.max(inventory, 0) / maxInventory) * chartHeight;
+  const linePath = points.map((point, index) => `${index === 0 ? "M" : "L"} ${x(point.day).toFixed(1)} ${y(point.inventory).toFixed(1)}`).join(" ");
+  const fillPath = `${linePath} L ${x(horizon).toFixed(1)} ${y(0).toFixed(1)} L ${x(0).toFixed(1)} ${y(0).toFixed(1)} Z`;
+  const stockoutBand = stockoutDay !== undefined ? `<rect class="chart-danger" x="${x(stockoutDay)}" y="${pad.top}" width="${x(horizon) - x(stockoutDay)}" height="${chartHeight}" />` : "";
+  const stockoutMarker =
+    stockoutDay !== undefined
+      ? `<line class="chart-stockout" x1="${x(stockoutDay)}" x2="${x(stockoutDay)}" y1="${pad.top}" y2="${pad.top + chartHeight}" />
+         <text class="chart-callout" x="${x(stockoutDay) + 8}" y="${pad.top + 18}">Stockout day ${stockoutDay}</text>`
+      : "";
+
+  if (stockoutDay !== undefined) {
+    const timing = stockoutDay < reorderArrivalDay ? "before" : "after";
+    els.timelineSummary.textContent = `${row.name} is projected to stock out around day ${stockoutDay}, ${timing} the effective replenishment lead time of ${reorderArrivalDay} days.`;
+  } else {
+    els.timelineSummary.textContent = `${row.name} stays above zero through the 30-day horizon after planned replenishment timing.`;
+  }
+
+  els.timelineChart.innerHTML = `
+    <line class="chart-axis" x1="${pad.left}" x2="${pad.left}" y1="${pad.top}" y2="${pad.top + chartHeight}" />
+    <line class="chart-axis" x1="${pad.left}" x2="${pad.left + chartWidth}" y1="${pad.top + chartHeight}" y2="${pad.top + chartHeight}" />
+    <line class="chart-grid" x1="${pad.left}" x2="${pad.left + chartWidth}" y1="${y(maxInventory / 2)}" y2="${y(maxInventory / 2)}" />
+    <line class="chart-grid" x1="${pad.left}" x2="${pad.left + chartWidth}" y1="${y(maxInventory * 0.25)}" y2="${y(maxInventory * 0.25)}" />
+    ${stockoutBand}
+    <path class="chart-fill" d="${fillPath}" />
+    <path class="chart-line" d="${linePath}" />
+    <line class="chart-marker" x1="${x(reorderArrivalDay)}" x2="${x(reorderArrivalDay)}" y1="${pad.top}" y2="${pad.top + chartHeight}" />
+    ${stockoutMarker}
+    <text class="chart-label" x="${pad.left}" y="${height - 12}">Today</text>
+    <text class="chart-label" x="${x(10) - 18}" y="${height - 12}">Day 10</text>
+    <text class="chart-label" x="${x(20) - 18}" y="${height - 12}">Day 20</text>
+    <text class="chart-label" x="${x(30) - 28}" y="${height - 12}">Day 30</text>
+    <text class="chart-callout" x="${Math.min(x(reorderArrivalDay) + 8, width - 210)}" y="${pad.top + chartHeight - 10}">Replenishment ETA</text>
+    <text class="chart-label" x="8" y="${y(maxInventory)}">${Math.round(maxInventory).toLocaleString()}</text>
+    <text class="chart-label" x="22" y="${y(0) + 4}">0</text>
+  `;
+}
+
+function buildTimelinePoints(row, horizon) {
+  const points = [];
+  let inventory = row.currentStock;
+
+  for (let day = 0; day <= horizon; day += 1) {
+    if (day === row.leadTimeDays) {
+      inventory += row.onOrder;
+    }
+    if (day === row.effectiveLeadTime) {
+      inventory += row.reorderQty;
+    }
+    points.push({ day, inventory: Math.max(0, inventory) });
+    inventory -= row.dailyDemand;
+  }
+
+  return points;
 }
 
 function buildSummary() {
