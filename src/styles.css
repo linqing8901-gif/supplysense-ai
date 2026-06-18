@@ -115,7 +115,7 @@ select {
 
 .metrics {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 14px;
   margin-bottom: 16px;
 }
@@ -189,7 +189,7 @@ select {
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 860px;
+  min-width: 980px;
 }
 
 th,
@@ -241,6 +241,33 @@ tbody tr.selected {
 
 .risk-Stable {
   background: var(--green);
+}
+
+.supplier-pill {
+  display: inline-flex;
+  align-items: center;
+  min-width: 70px;
+  justify-content: center;
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.supplier-High {
+  color: var(--red);
+  background: #fff1f0;
+}
+
+.supplier-Medium {
+  color: var(--amber);
+  background: #fff8e8;
+}
+
+.supplier-Low {
+  color: var(--green);
+  background: #edf8f1;
 }
 
 .insight-panel {

@@ -20,6 +20,7 @@
             <input id="csvInput" type="file" accept=".csv,text/csv" />
           </label>
           <button id="loadSample" type="button" title="Load sample inventory data">Load Sample</button>
+          <button id="exportPo" type="button" title="Export recommended purchase orders">Export PO CSV</button>
         </div>
       </section>
 
@@ -39,6 +40,10 @@
         <div class="metric">
           <span class="metric-label">Median Cover</span>
           <strong id="medianCover">0 days</strong>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Supplier Risk</span>
+          <strong id="supplierRisk">0</strong>
         </div>
       </section>
 
@@ -66,6 +71,7 @@
                   <th>Risk</th>
                   <th>Days Cover</th>
                   <th>Lead Time</th>
+                  <th>Supplier Risk</th>
                   <th>Reorder Qty</th>
                   <th>Cash Need</th>
                 </tr>
