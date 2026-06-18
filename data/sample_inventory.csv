@@ -1,0 +1,13 @@
+sku,name,category,current_stock,lead_time_days,supplier,on_order,last_14d_sales,unit_cost
+SKU-1001,Insulin Cold Pack,Healthcare Logistics,180,9,NorthBridge Medical,40,312,12.50
+SKU-1002,Portable Glucose Strip,Healthcare Logistics,620,6,MedAxis Supply,150,498,4.10
+SKU-1003,N95 Respirator Box,Protective Equipment,95,12,ShieldWorks,0,210,8.75
+SKU-1004,IV Starter Kit,Clinical Supplies,260,8,NorthBridge Medical,60,226,14.20
+SKU-1005,Smart Thermometer,Devices,48,15,Quantiva Devices,20,84,19.90
+SKU-1006,Disposable Syringe Pack,Clinical Supplies,980,5,MedAxis Supply,300,770,2.40
+SKU-1007,First Aid Refill Kit,Emergency Supplies,130,10,SafeRoute Global,50,112,7.60
+SKU-1008,Electrolyte Sachet,Pharmacy,340,7,VitaLink Pharma,120,392,1.20
+SKU-1009,Digital BP Monitor,Devices,26,18,Quantiva Devices,10,38,34.00
+SKU-1010,Wound Dressing Roll,Clinical Supplies,410,6,ShieldWorks,80,280,3.80
+SKU-1011,Cold Chain Label,Logistics,220,14,SafeRoute Global,0,168,0.95
+SKU-1012,Sanitizer Refill Can,Facility Supplies,560,5,CleanCore,200,455,5.50
