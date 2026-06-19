@@ -6,11 +6,13 @@ Supply chain teams often do not discover inventory risk until it is too late. A 
 
 SupplySense AI helps planners move from static inventory tracking to proactive replenishment decisions.
 
-## 0:25-0:55 - Load Data
+## 0:25-0:55 - Load Data and Optimize
 
 I start by loading a sample inventory CSV. Each row includes stock levels, recent sales, supplier lead time, open orders, unit cost, supplier reliability, average delay, defect rate, and regional risk.
 
-The dashboard immediately calculates critical SKUs, value at risk, recommended reorder value, median stock cover, and supplier risk exposure.
+The dataset also includes eight weeks of historical weekly demand. I click Optimize Model so SupplySense can tune the safety buffer, supplier risk weight, and risk scoring conservatism from recent demand volatility.
+
+The dashboard then calculates critical SKUs, value at risk, recommended reorder value, median stock cover, and supplier risk exposure.
 
 ## 0:55-1:35 - Priority Queue
 

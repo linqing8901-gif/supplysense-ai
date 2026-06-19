@@ -214,6 +214,60 @@ select {
   color: var(--ink);
 }
 
+.calibration-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(420px, 1fr);
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.96), rgba(251, 252, 250, 0.9)),
+    linear-gradient(90deg, rgba(36, 87, 166, 0.07), rgba(13, 111, 114, 0.06));
+  box-shadow: var(--shadow);
+}
+
+.calibration-panel h2 {
+  margin-bottom: 6px;
+  font-size: 18px;
+}
+
+.calibration-panel p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.calibration-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.calibration-grid div {
+  min-height: 78px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.calibration-grid span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.calibration-grid strong {
+  font-size: 20px;
+}
+
 .workspace {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 380px;
@@ -507,6 +561,10 @@ tbody tr.selected {
     grid-template-columns: 1fr;
   }
 
+  .calibration-panel {
+    grid-template-columns: 1fr;
+  }
+
   .insight-panel {
     position: static;
   }
@@ -541,6 +599,10 @@ tbody tr.selected {
 
   .value-strip {
     grid-template-columns: 1fr;
+  }
+
+  .calibration-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .status-toast {

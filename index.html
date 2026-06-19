@@ -20,6 +20,7 @@
             <input id="csvInput" type="file" accept=".csv,text/csv" />
           </label>
           <button id="loadSample" type="button" title="Load sample inventory data">Load Sample</button>
+          <button id="optimizeModel" type="button" title="Calibrate thresholds from historical demand">Optimize Model</button>
           <button id="exportPo" type="button" title="Export recommended purchase orders">Export PO CSV</button>
         </div>
       </section>
@@ -66,7 +67,34 @@
         <strong>Model assumptions:</strong>
         This demo uses synthetic inventory data and an interpretable heuristic model based on common planning concepts:
         days of cover, lead time, safety stock, reorder quantity, and supplier reliability. Thresholds are configurable
-        demo assumptions that would be calibrated with historical demand and service-level targets in production.
+        demo assumptions; Optimize Model demonstrates how historical weekly demand can tune those assumptions.
+      </section>
+
+      <section class="calibration-panel" aria-label="Historical model calibration">
+        <div>
+          <h2>Historical Calibration</h2>
+          <p id="calibrationSummary">
+            Baseline mode uses transparent default thresholds. Click Optimize Model to tune buffers using historical weekly demand and supplier risk signals.
+          </p>
+        </div>
+        <div class="calibration-grid">
+          <div>
+            <span>Safety Buffer</span>
+            <strong id="safetyBuffer">1.00x</strong>
+          </div>
+          <div>
+            <span>Supplier Weight</span>
+            <strong id="supplierWeight">1.00x</strong>
+          </div>
+          <div>
+            <span>Risk Threshold</span>
+            <strong id="riskAdjustment">Baseline</strong>
+          </div>
+          <div>
+            <span>Confidence</span>
+            <strong id="calibrationConfidence">Baseline</strong>
+          </div>
+        </div>
       </section>
 
       <section class="workspace">
