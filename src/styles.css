@@ -302,7 +302,7 @@ select {
 
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 380px;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 380px);
   gap: 16px;
   align-items: start;
   margin-bottom: 16px;
@@ -377,7 +377,14 @@ select {
   box-shadow: var(--shadow);
 }
 
+.table-panel {
+  position: relative;
+  z-index: 2;
+}
+
 .panel-heading {
+  position: relative;
+  z-index: 3;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -569,7 +576,10 @@ tbody tr.selected {
 
 .insight-panel {
   position: sticky;
-  top: 16px;
+  top: 88px;
+  z-index: 1;
+  max-width: 380px;
+  justify-self: end;
   padding-bottom: 18px;
 }
 
