@@ -98,41 +98,50 @@
           </div>
         </div>
 
-        <div class="detail-grid">
-          <aside class="insight-panel" aria-label="Selected item explanation">
-            <div class="panel-heading compact">
-              <div>
-                <h2>Planner Brief</h2>
-                <p id="selectedSku">Select a SKU</p>
+        <div class="detail-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Decision Detail</h2>
+              <p>Explain the selected SKU and visualize the stockout timeline.</p>
+            </div>
+          </div>
+          <div class="detail-content">
+            <aside class="insight-panel" aria-label="Selected item explanation">
+              <div class="panel-heading compact">
+                <div>
+                  <h2>Planner Brief</h2>
+                  <p id="selectedSku">Select a SKU</p>
+                </div>
               </div>
-            </div>
-            <div id="riskGauge" class="risk-gauge" aria-hidden="true">
-              <span></span>
-            </div>
-            <div id="insightText" class="insight-text">
-              Load the sample dataset to generate stockout explanations and replenishment actions.
-            </div>
-            <div class="summary-box">
-              <div class="summary-heading">
-                <h3>Submission Summary Draft</h3>
-                <button id="copySummary" type="button" title="Copy submission summary">Copy Summary</button>
+              <div id="riskGauge" class="risk-gauge" aria-hidden="true">
+                <span></span>
               </div>
-              <p id="summaryDraft">
-                SupplySense AI predicts SKU-level stockout risk and recommends replenishment actions using inventory, demand, supplier lead time, and open order signals.
-              </p>
-            </div>
-          </aside>
+              <div id="insightText" class="insight-text">
+                Load the sample dataset to generate stockout explanations and replenishment actions.
+              </div>
+            </aside>
 
-          <div class="timeline-panel">
-            <div class="panel-heading">
-              <div>
-                <h2>Stockout Timeline</h2>
-                <p id="timelineSummary">Select a SKU to compare projected inventory against replenishment timing.</p>
+            <div class="timeline-panel">
+              <div class="panel-heading compact">
+                <div>
+                  <h2>Stockout Timeline</h2>
+                  <p id="timelineSummary">Select a SKU to compare projected inventory against replenishment timing.</p>
+                </div>
+              </div>
+              <div class="chart-wrap">
+                <svg id="timelineChart" viewBox="0 0 760 260" role="img" aria-label="Projected inventory timeline"></svg>
               </div>
             </div>
-            <div class="chart-wrap">
-              <svg id="timelineChart" viewBox="0 0 760 260" role="img" aria-label="Projected inventory timeline"></svg>
+          </div>
+
+          <div class="summary-box">
+            <div class="summary-heading">
+              <h3>Submission Summary Draft</h3>
+              <button id="copySummary" type="button" title="Copy submission summary">Copy Summary</button>
             </div>
+            <p id="summaryDraft">
+              SupplySense AI predicts SKU-level stockout risk and recommends replenishment actions using inventory, demand, supplier lead time, and open order signals.
+            </p>
           </div>
         </div>
       </section>
