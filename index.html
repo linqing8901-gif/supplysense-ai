@@ -63,102 +63,6 @@
         </div>
       </section>
 
-      <section class="method-note" aria-label="Model assumptions">
-        <strong>Model assumptions:</strong>
-        Demo dataset is synthetic and designed to simulate supply chain planning scenarios.
-        This demo uses synthetic inventory data and an interpretable heuristic model based on common planning concepts:
-        days of cover, lead time, safety stock, reorder quantity, and supplier reliability. Thresholds are configurable
-        demo assumptions; Optimize Model demonstrates how historical weekly demand can tune those assumptions.
-      </section>
-
-      <section class="calibration-panel" aria-label="Historical model calibration">
-        <div>
-          <h2>Historical Calibration</h2>
-          <p id="calibrationSummary">
-            Baseline mode uses transparent default thresholds. Click Optimize Model to tune buffers using historical weekly demand and supplier risk signals.
-          </p>
-        </div>
-        <div class="calibration-grid">
-          <div>
-            <span>Safety Buffer</span>
-            <strong id="safetyBuffer">1.00x</strong>
-          </div>
-          <div>
-            <span>Supplier Weight</span>
-            <strong id="supplierWeight">1.00x</strong>
-          </div>
-          <div>
-            <span>Risk Threshold</span>
-            <strong id="riskAdjustment">Baseline</strong>
-          </div>
-          <div>
-            <span>Confidence</span>
-            <strong id="calibrationConfidence">Baseline</strong>
-          </div>
-        </div>
-      </section>
-
-      <section class="readiness-panel" aria-label="Data quality and calibration readiness">
-        <div>
-          <h2>Data Quality / Calibration Readiness</h2>
-          <p id="readinessSummary">Load inventory data to validate required fields and historical coverage.</p>
-        </div>
-        <div class="readiness-grid">
-          <div>
-            <span>Rows Loaded</span>
-            <strong id="rowsLoaded">0</strong>
-          </div>
-          <div>
-            <span>Missing Fields</span>
-            <strong id="missingFields">0</strong>
-          </div>
-          <div>
-            <span>History Coverage</span>
-            <strong id="historyCoverage">0%</strong>
-          </div>
-          <div>
-            <span>Readiness</span>
-            <strong id="readinessStatus">Waiting</strong>
-          </div>
-        </div>
-      </section>
-
-      <section class="comparison-panel" aria-label="Calibration before and after comparison">
-        <div>
-          <h2>Before / After Calibration</h2>
-          <p>Compare baseline planning output with the optimized assumptions after historical calibration.</p>
-        </div>
-        <div class="comparison-grid">
-          <div>
-            <span>Critical SKUs</span>
-            <strong><em id="beforeCritical">0</em> -> <em id="afterCritical">0</em></strong>
-          </div>
-          <div>
-            <span>Reorder Value</span>
-            <strong><em id="beforeReorder">$0</em> -> <em id="afterReorder">$0</em></strong>
-          </div>
-          <div>
-            <span>Median Cover</span>
-            <strong><em id="beforeCover">0 days</em> -> <em id="afterCover">0 days</em></strong>
-          </div>
-        </div>
-      </section>
-
-      <section class="production-panel" aria-label="Production readiness roadmap">
-        <article>
-          <span>Production Roadmap</span>
-          <p>Connect ERP, WMS, POS, and supplier performance feeds; persist recommendations; add planner approval and audit history.</p>
-        </article>
-        <article>
-          <span>Backtesting Plan</span>
-          <p>Track predicted vs actual stockouts, false alarms, service-level lift, reorder adoption, and inventory carrying cost impact.</p>
-        </article>
-        <article>
-          <span>Current Limitations</span>
-          <p>Demo logic does not yet model promotions, seasonality, contract terms, multi-location transfers, or perishable inventory.</p>
-        </article>
-      </section>
-
       <section class="workspace">
         <div class="main-column">
           <div class="table-panel">
@@ -232,6 +136,114 @@
           </div>
         </aside>
       </section>
+
+      <details class="disclosure-panel">
+        <summary>
+          <span>Model & Readiness</span>
+          <small>Assumptions, calibration, data quality, and before/after metrics</small>
+        </summary>
+        <section class="method-note" aria-label="Model assumptions">
+          <strong>Model assumptions:</strong>
+          Demo dataset is synthetic and designed to simulate supply chain planning scenarios.
+          This demo uses synthetic inventory data and an interpretable heuristic model based on common planning concepts:
+          days of cover, lead time, safety stock, reorder quantity, and supplier reliability. Thresholds are configurable
+          demo assumptions; Optimize Model demonstrates how historical weekly demand can tune those assumptions.
+        </section>
+
+        <section class="calibration-panel" aria-label="Historical model calibration">
+          <div>
+            <h2>Historical Calibration</h2>
+            <p id="calibrationSummary">
+              Baseline mode uses transparent default thresholds. Click Optimize Model to tune buffers using historical weekly demand and supplier risk signals.
+            </p>
+          </div>
+          <div class="calibration-grid">
+            <div>
+              <span>Safety Buffer</span>
+              <strong id="safetyBuffer">1.00x</strong>
+            </div>
+            <div>
+              <span>Supplier Weight</span>
+              <strong id="supplierWeight">1.00x</strong>
+            </div>
+            <div>
+              <span>Risk Threshold</span>
+              <strong id="riskAdjustment">Baseline</strong>
+            </div>
+            <div>
+              <span>Confidence</span>
+              <strong id="calibrationConfidence">Baseline</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="readiness-panel" aria-label="Data quality and calibration readiness">
+          <div>
+            <h2>Data Quality / Calibration Readiness</h2>
+            <p id="readinessSummary">Load inventory data to validate required fields and historical coverage.</p>
+          </div>
+          <div class="readiness-grid">
+            <div>
+              <span>Rows Loaded</span>
+              <strong id="rowsLoaded">0</strong>
+            </div>
+            <div>
+              <span>Missing Fields</span>
+              <strong id="missingFields">0</strong>
+            </div>
+            <div>
+              <span>History Coverage</span>
+              <strong id="historyCoverage">0%</strong>
+            </div>
+            <div>
+              <span>Readiness</span>
+              <strong id="readinessStatus">Waiting</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="comparison-panel" aria-label="Calibration before and after comparison">
+          <div>
+            <h2>Before / After Calibration</h2>
+            <p>Compare baseline planning output with the optimized assumptions after historical calibration.</p>
+          </div>
+          <div class="comparison-grid">
+            <div>
+              <span>Critical SKUs</span>
+              <strong><em id="beforeCritical">0</em> -> <em id="afterCritical">0</em></strong>
+            </div>
+            <div>
+              <span>Reorder Value</span>
+              <strong><em id="beforeReorder">$0</em> -> <em id="afterReorder">$0</em></strong>
+            </div>
+            <div>
+              <span>Median Cover</span>
+              <strong><em id="beforeCover">0 days</em> -> <em id="afterCover">0 days</em></strong>
+            </div>
+          </div>
+        </section>
+      </details>
+
+      <details class="disclosure-panel secondary">
+        <summary>
+          <span>Production Notes</span>
+          <small>Roadmap, backtesting plan, and current limitations</small>
+        </summary>
+        <section class="production-panel" aria-label="Production readiness roadmap">
+          <article>
+            <span>Production Roadmap</span>
+            <p>Connect ERP, WMS, POS, and supplier performance feeds; persist recommendations; add planner approval and audit history.</p>
+          </article>
+          <article>
+            <span>Backtesting Plan</span>
+            <p>Track predicted vs actual stockouts, false alarms, service-level lift, reorder adoption, and inventory carrying cost impact.</p>
+          </article>
+          <article>
+            <span>Current Limitations</span>
+            <p>Demo logic does not yet model promotions, seasonality, contract terms, multi-location transfers, or perishable inventory.</p>
+          </article>
+        </section>
+      </details>
     </main>
     <div id="statusToast" class="status-toast" role="status" aria-live="polite"></div>
 

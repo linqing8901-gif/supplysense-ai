@@ -209,7 +209,7 @@ select {
 }
 
 .method-note {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   padding: 14px 16px;
   border: 1px solid var(--line);
   border-left: 4px solid var(--teal);
@@ -231,7 +231,7 @@ select {
   grid-template-columns: minmax(0, 1.4fr) minmax(420px, 1fr);
   gap: 18px;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -305,6 +305,61 @@ select {
   grid-template-columns: minmax(0, 1fr) 380px;
   gap: 16px;
   align-items: start;
+  margin-bottom: 16px;
+}
+
+.disclosure-panel {
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow);
+}
+
+.disclosure-panel summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 58px;
+  padding: 0 18px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.disclosure-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclosure-panel summary::after {
+  content: "+";
+  color: var(--teal);
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.disclosure-panel[open] summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.disclosure-panel[open] summary::after {
+  content: "-";
+}
+
+.disclosure-panel summary span {
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.disclosure-panel summary small {
+  color: var(--muted);
+  font-size: 13px;
+  text-align: right;
+}
+
+.disclosure-panel > section {
+  margin: 12px;
 }
 
 .main-column {
