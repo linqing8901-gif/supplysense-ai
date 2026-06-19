@@ -3,6 +3,7 @@ const state = {
   rows: [],
   selectedSku: null,
   filter: "all",
+  dataSourceName: "Medical Demo",
   plannerDecisions: {},
   dataQuality: {
     rowCount: 0,
@@ -22,6 +23,60 @@ const state = {
   },
 };
 
+const CSV_HEADERS = [
+  "sku",
+  "name",
+  "category",
+  "current_stock",
+  "lead_time_days",
+  "supplier",
+  "on_order",
+  "last_14d_sales",
+  "unit_cost",
+  "supplier_reliability",
+  "avg_delay_days",
+  "defect_rate",
+  "region_risk",
+  "min_order_qty",
+  "pack_size",
+  "warehouse_capacity",
+  "hist_wk_8",
+  "hist_wk_7",
+  "hist_wk_6",
+  "hist_wk_5",
+  "hist_wk_4",
+  "hist_wk_3",
+  "hist_wk_2",
+  "hist_wk_1",
+];
+
+const CSV_TEMPLATE_ROW = [
+  "SKU-0001",
+  "Example Product",
+  "Example Category",
+  "120",
+  "10",
+  "Example Supplier",
+  "40",
+  "210",
+  "8.50",
+  "90",
+  "1.5",
+  "0.8",
+  "Medium",
+  "100",
+  "25",
+  "500",
+  "70",
+  "76",
+  "82",
+  "88",
+  "91",
+  "96",
+  "94",
+  "101",
+];
+
 const SAMPLE_CSV = `sku,name,category,current_stock,lead_time_days,supplier,on_order,last_14d_sales,unit_cost,supplier_reliability,avg_delay_days,defect_rate,region_risk,min_order_qty,pack_size,warehouse_capacity,hist_wk_8,hist_wk_7,hist_wk_6,hist_wk_5,hist_wk_4,hist_wk_3,hist_wk_2,hist_wk_1
 SKU-1001,Insulin Cold Pack,Healthcare Logistics,180,9,NorthBridge Medical,40,312,12.50,91,1.2,0.8,Low,80,20,520,118,132,141,149,156,168,151,161
 SKU-1002,Portable Glucose Strip,Healthcare Logistics,620,6,MedAxis Supply,150,498,4.10,95,0.4,0.5,Low,120,50,1100,220,238,246,252,261,249,254,244
@@ -36,9 +91,25 @@ SKU-1010,Wound Dressing Roll,Clinical Supplies,410,6,ShieldWorks,80,280,3.80,78,
 SKU-1011,Cold Chain Label,Logistics,220,14,SafeRoute Global,0,168,0.95,82,2.2,1.2,Medium,100,25,460,62,68,71,78,84,88,80,86
 SKU-1012,Sanitizer Refill Can,Facility Supplies,560,5,CleanCore,200,455,5.50,93,0.8,0.4,Low,120,40,980,196,204,220,218,230,236,224,231`;
 
+const RETAIL_CSV = `sku,name,category,current_stock,lead_time_days,supplier,on_order,last_14d_sales,unit_cost,supplier_reliability,avg_delay_days,defect_rate,region_risk,min_order_qty,pack_size,warehouse_capacity,hist_wk_8,hist_wk_7,hist_wk_6,hist_wk_5,hist_wk_4,hist_wk_3,hist_wk_2,hist_wk_1
+RTL-2001,Wireless Earbuds,Consumer Electronics,140,18,Pacific Audio Co,40,196,28.50,76,4.2,2.4,High,100,20,420,72,78,81,86,92,104,98,110
+RTL-2002,USB-C Charging Cable,Accessories,1220,7,NorthPort Components,300,910,3.20,92,0.9,0.6,Low,500,100,2200,380,402,418,436,452,460,448,455
+RTL-2003,Insulated Water Bottle,Home Goods,260,12,EverPeak Goods,0,238,9.40,84,2.6,1.1,Medium,120,24,620,84,91,104,112,118,130,126,132
+RTL-2004,Organic Coffee Beans,Grocery,310,9,Roastline Foods,160,420,6.75,88,1.4,0.8,Medium,150,30,900,166,178,186,201,210,222,218,226
+RTL-2005,Yoga Mat,Wellness,75,16,FlexiSource,20,98,13.90,73,3.9,2.2,High,80,10,260,34,38,42,46,50,57,54,62
+RTL-2006,LED Desk Lamp,Home Office,190,20,BrightWorks Supply,40,154,18.20,79,3.2,1.8,Medium,60,12,360,52,57,61,66,70,76,73,81
+RTL-2007,Kids Rain Jacket,Apparel,420,14,Harbor Stitch,120,308,15.60,86,1.8,1.0,Medium,150,25,880,120,134,141,150,160,168,166,174
+RTL-2008,Notebook 3-Pack,Stationery,980,6,PaperTrail Wholesale,240,812,2.10,94,0.6,0.4,Low,400,100,1800,340,352,370,382,396,410,404,416
+RTL-2009,Smart Plug,Consumer Electronics,60,21,Pacific Audio Co,0,84,11.80,76,4.2,2.4,High,80,20,220,24,27,31,36,40,44,42,48
+RTL-2010,Protein Bar Variety Pack,Grocery,510,8,FreshRoute Foods,180,560,8.25,89,1.3,0.9,Medium,200,40,1050,220,234,246,258,274,286,280,292
+RTL-2011,Reusable Tote Bag,Accessories,720,5,GreenCarry Supply,160,392,1.85,96,0.3,0.3,Low,300,100,1400,162,170,184,190,198,206,202,210
+RTL-2012,Bluetooth Speaker,Consumer Electronics,88,19,BrightWorks Supply,20,112,24.50,79,3.2,1.8,Medium,60,10,300,38,42,47,52,58,64,61,68`;
+
 const els = {
   csvInput: document.getElementById("csvInput"),
   loadSample: document.getElementById("loadSample"),
+  loadRetailSample: document.getElementById("loadRetailSample"),
+  downloadTemplate: document.getElementById("downloadTemplate"),
   optimizeModel: document.getElementById("optimizeModel"),
   exportPo: document.getElementById("exportPo"),
   copySummary: document.getElementById("copySummary"),
@@ -66,6 +137,7 @@ const els = {
   historyCoverage: document.getElementById("historyCoverage"),
   readinessStatus: document.getElementById("readinessStatus"),
   readinessSummary: document.getElementById("readinessSummary"),
+  validationMessage: document.getElementById("validationMessage"),
   beforeCritical: document.getElementById("beforeCritical"),
   afterCritical: document.getElementById("afterCritical"),
   beforeReorder: document.getElementById("beforeReorder"),
@@ -75,20 +147,23 @@ const els = {
 };
 
 els.loadSample.addEventListener("click", async () => {
-  try {
-    const response = await fetch("data/sample_inventory.csv");
-    loadCsv(await response.text());
-  } catch {
-    loadCsv(SAMPLE_CSV);
-  }
-  showToast("Sample inventory loaded");
+  await loadCsvFromPath("data/sample_inventory.csv", "Medical Demo", SAMPLE_CSV);
+});
+
+els.loadRetailSample.addEventListener("click", async () => {
+  await loadCsvFromPath("data/retail_inventory.csv", "Retail Demo", RETAIL_CSV);
+});
+
+els.downloadTemplate.addEventListener("click", () => {
+  downloadCsv("supplysense-upload-template.csv", [CSV_HEADERS.join(","), CSV_TEMPLATE_ROW.map(csvEscape).join(",")].join("\n"));
+  showToast("CSV template downloaded");
 });
 
 els.csvInput.addEventListener("change", async (event) => {
   const [file] = event.target.files;
   if (!file) return;
-  loadCsv(await file.text());
-  showToast(`${file.name} uploaded`);
+  loadCsv(await file.text(), file.name);
+  showToast(buildValidationToast(file.name));
 });
 
 els.riskFilter.addEventListener("change", (event) => {
@@ -125,7 +200,23 @@ els.copySummary.addEventListener("click", async () => {
   showToast("Submission summary copied");
 });
 
-function loadCsv(csvText) {
+async function loadCsvFromPath(path, sourceName, fallbackCsv = "") {
+  try {
+    const response = await fetch(path);
+    if (!response.ok) throw new Error("CSV fetch failed");
+    loadCsv(await response.text(), sourceName);
+  } catch {
+    if (!fallbackCsv) {
+      showToast(`${sourceName} could not be loaded`);
+      return;
+    }
+    loadCsv(fallbackCsv, sourceName);
+  }
+  showToast(`${sourceName} loaded`);
+}
+
+function loadCsv(csvText, sourceName = "Uploaded CSV") {
+  state.dataSourceName = sourceName;
   state.rawRows = parseCsv(csvText);
   state.dataQuality = analyzeDataQuality(state.rawRows);
   resetCalibration();
@@ -142,6 +233,7 @@ function rescoreRows() {
 
 function parseCsv(csvText) {
   const lines = csvText.trim().split(/\r?\n/).filter(Boolean);
+  if (!lines.length) return [];
   const headers = splitCsvLine(lines[0]).map((header) => header.trim());
 
   return lines.slice(1).map((line) => {
@@ -397,11 +489,13 @@ function renderDataQuality() {
 
   if (!state.dataQuality.rowCount) {
     els.readinessSummary.textContent = "Load inventory data to validate required fields and historical coverage.";
+    els.validationMessage.textContent = "No rows loaded yet. Download the CSV template or load a demo dataset to start.";
     return;
   }
 
   const missing = state.dataQuality.missingFields.length ? ` Missing fields: ${state.dataQuality.missingFields.join(", ")}.` : "";
   els.readinessSummary.textContent = `${state.dataQuality.rowCount} rows loaded with ${Math.round(state.dataQuality.historyCoverage * 100)}% historical coverage. Calibration readiness is ${state.dataQuality.readiness}.${missing}`;
+  els.validationMessage.textContent = `${state.dataSourceName}: ${state.dataQuality.rowCount} rows loaded, ${state.dataQuality.missingRequiredCount} missing required values, ${Math.round(state.dataQuality.historyCoverage * 100)}% history coverage. Readiness: ${state.dataQuality.readiness}.${missing}`;
 }
 
 function renderCalibration() {
@@ -634,14 +728,20 @@ function exportPurchaseOrders() {
       .join(","),
   );
 
-  const blob = new Blob([[headers.join(","), ...lines].join("\n")], { type: "text/csv;charset=utf-8" });
+  downloadCsv("supplysense-recommended-purchase-orders.csv", [headers.join(","), ...lines].join("\n"));
+  showToast(`${rows.length} purchase order recommendations exported`);
+}
+
+function downloadCsv(filename, content) {
+  const blob = new Blob([content], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "supplysense-recommended-purchase-orders.csv";
+  link.download = filename;
+  document.body.appendChild(link);
   link.click();
+  link.remove();
   URL.revokeObjectURL(url);
-  showToast(`${rows.length} purchase order recommendations exported`);
 }
 
 function buildRecommendationReason(row) {
@@ -714,6 +814,11 @@ function showToast(message) {
   showToast.timeoutId = window.setTimeout(() => {
     els.statusToast.classList.remove("visible");
   }, 2200);
+}
+
+function buildValidationToast(sourceName) {
+  const quality = state.dataQuality;
+  return `${sourceName}: ${quality.readiness}, ${quality.rowCount} rows, ${Math.round(quality.historyCoverage * 100)}% history`;
 }
 
 function number(value) {

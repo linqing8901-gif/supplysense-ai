@@ -19,7 +19,9 @@
             <span>Upload CSV</span>
             <input id="csvInput" type="file" accept=".csv,text/csv" />
           </label>
-          <button id="loadSample" type="button" title="Load sample inventory data">Load Sample</button>
+          <button id="downloadTemplate" type="button" title="Download the required CSV column template">Download CSV Template</button>
+          <button id="loadSample" type="button" title="Load medical supply demo data">Load Medical Demo</button>
+          <button id="loadRetailSample" type="button" title="Load retail inventory demo data">Load Retail Demo</button>
           <button id="optimizeModel" type="button" title="Calibrate thresholds from historical demand">Optimize Model</button>
           <button id="exportPo" type="button" title="Export recommended purchase orders">Export PO CSV</button>
         </div>
@@ -65,7 +67,12 @@
 
       <section class="demo-flow" aria-label="Recommended demo flow">
         <strong>Recommended demo flow:</strong>
-        Load Sample -> Optimize Model -> Select a Critical SKU -> Review Planner Brief -> Export PO CSV
+        Load a demo or upload your CSV -> Review Data Validation -> Optimize Model -> Select a Critical SKU -> Export PO CSV
+      </section>
+
+      <section id="validationBanner" class="validation-banner" aria-label="CSV validation result">
+        <strong>Data validation:</strong>
+        <span id="validationMessage">Medical demo data loaded. Upload your own CSV or download the template to test another dataset.</span>
       </section>
 
       <section class="workspace">
@@ -122,7 +129,7 @@
                 <span></span>
               </div>
               <div id="insightText" class="insight-text">
-                Load the sample dataset to generate stockout explanations and replenishment actions.
+                Load a demo dataset or upload your CSV to generate stockout explanations and replenishment actions.
               </div>
             </aside>
 
@@ -158,7 +165,7 @@
         </summary>
         <section class="method-note" aria-label="Model assumptions">
           <strong>Model assumptions:</strong>
-          Demo dataset is synthetic and designed to simulate supply chain planning scenarios.
+          Demo datasets are synthetic and designed to simulate supply chain planning scenarios.
           This demo uses synthetic inventory data and an interpretable heuristic model based on common planning concepts:
           days of cover, lead time, safety stock, reorder quantity, and supplier reliability. Thresholds are configurable
           demo assumptions; Optimize Model demonstrates how historical weekly demand can tune those assumptions.

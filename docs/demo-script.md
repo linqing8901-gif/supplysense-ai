@@ -8,7 +8,7 @@ SupplySense AI helps planners move from static inventory tracking to proactive r
 
 ## 0:25-0:55 - Load Data and Optimize
 
-I start by loading a sample inventory CSV. Each row includes stock levels, recent sales, supplier lead time, open orders, unit cost, supplier reliability, average delay, defect rate, and regional risk.
+I start by showing that SupplySense can load either built-in demo data or a user-provided CSV. The template download shows the required columns, and each row includes stock levels, recent sales, supplier lead time, open orders, unit cost, supplier reliability, average delay, defect rate, and regional risk.
 
 The dataset also includes eight weeks of historical weekly demand. Before calibrating, the Data Quality panel checks whether required CSV fields are present and whether there is enough historical coverage.
 
