@@ -50,7 +50,7 @@ SupplySense AI turns operational inventory data into a prioritized decision queu
 sku,name,category,current_stock,lead_time_days,supplier,on_order,last_14d_sales,unit_cost,supplier_reliability,avg_delay_days,defect_rate,region_risk,min_order_qty,pack_size,warehouse_capacity,hist_wk_8,hist_wk_7,hist_wk_6,hist_wk_5,hist_wk_4,hist_wk_3,hist_wk_2,hist_wk_1
 ```
 
-The app validates row count, missing required values, and historical weekly demand coverage after each upload. The built-in datasets are synthetic demos; uploaded CSV files run through the same scoring, calibration, planner brief, timeline, and export logic.
+The app validates file type, row count, missing required values, and historical weekly demand coverage after each upload. Excel files such as the raw UCI Online Retail workbook are intentionally rejected before parsing; convert them to the SupplySense CSV template first. The built-in datasets are synthetic demos; uploaded CSV files run through the same scoring, calibration, planner brief, timeline, and export logic.
 
 ## How It Works
 

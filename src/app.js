@@ -77,6 +77,8 @@ const CSV_TEMPLATE_ROW = [
   "101",
 ];
 
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+
 const SAMPLE_CSV = `sku,name,category,current_stock,lead_time_days,supplier,on_order,last_14d_sales,unit_cost,supplier_reliability,avg_delay_days,defect_rate,region_risk,min_order_qty,pack_size,warehouse_capacity,hist_wk_8,hist_wk_7,hist_wk_6,hist_wk_5,hist_wk_4,hist_wk_3,hist_wk_2,hist_wk_1
 SKU-1001,Insulin Cold Pack,Healthcare Logistics,180,9,NorthBridge Medical,40,312,12.50,91,1.2,0.8,Low,80,20,520,118,132,141,149,156,168,151,161
 SKU-1002,Portable Glucose Strip,Healthcare Logistics,620,6,MedAxis Supply,150,498,4.10,95,0.4,0.5,Low,120,50,1100,220,238,246,252,261,249,254,244
@@ -162,6 +164,14 @@ els.downloadTemplate.addEventListener("click", () => {
 els.csvInput.addEventListener("change", async (event) => {
   const [file] = event.target.files;
   if (!file) return;
+
+  const validationError = validateUploadFile(file);
+  if (validationError) {
+    rejectUpload(validationError);
+    event.target.value = "";
+    return;
+  }
+
   loadCsv(await file.text(), file.name);
   showToast(buildValidationToast(file.name));
 });
@@ -243,6 +253,36 @@ function parseCsv(csvText) {
       return row;
     }, {});
   });
+}
+
+function validateUploadFile(file) {
+  const fileName = file.name.toLowerCase();
+  const isCsv = fileName.endsWith(".csv") || file.type === "text/csv" || file.type === "application/vnd.ms-excel";
+
+  if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls")) {
+    return "Excel files are not uploaded directly. Convert the dataset to the SupplySense CSV template first.";
+  }
+
+  if (!isCsv) {
+    return "Unsupported file type. Please upload a .csv file using the SupplySense template.";
+  }
+
+  if (file.size > MAX_UPLOAD_BYTES) {
+    return `CSV is too large for the browser demo (${formatBytes(file.size)}). Please upload a smaller converted sample under ${formatBytes(MAX_UPLOAD_BYTES)}.`;
+  }
+
+  return "";
+}
+
+function rejectUpload(message) {
+  els.validationMessage.textContent = `Upload rejected: ${message}`;
+  showToast("Upload rejected: CSV required");
+}
+
+function formatBytes(bytes) {
+  if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  if (bytes >= 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${bytes} B`;
 }
 
 function analyzeDataQuality(rows) {
