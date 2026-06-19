@@ -16,6 +16,8 @@ SupplySense AI turns operational inventory data into a prioritized decision queu
 - Days of cover and effective lead time calculation
 - Supplier risk scoring from reliability, delay, defect, and region signals
 - History-informed calibration for safety buffer, supplier weight, and risk conservatism
+- Data quality and calibration readiness checks for uploaded CSV files
+- Before/after comparison for baseline vs optimized planning outputs
 - Recommended reorder quantity and estimated cash need
 - Stockout timeline visualization for the selected SKU
 - Planner-friendly natural language explanations
@@ -27,11 +29,13 @@ SupplySense AI turns operational inventory data into a prioritized decision queu
 1. Open `index.html` in a browser.
 2. Click `Load Sample` or upload a CSV with the same columns as `data/sample_inventory.csv`.
 3. Review the top risk metrics and project value summary.
-4. Click `Optimize Model` to tune risk assumptions from historical weekly demand.
-5. Select a high-risk SKU in the priority queue.
-6. Read the planner brief and supplier risk explanation.
-7. Use the stockout timeline to compare projected inventory against replenishment ETA.
-8. Export the recommended purchase order CSV.
+4. Review the data quality and calibration readiness panel.
+5. Click `Optimize Model` to tune risk assumptions from historical weekly demand.
+6. Compare baseline and optimized planning outputs.
+7. Select a high-risk SKU in the priority queue.
+8. Read the planner brief and supplier risk explanation.
+9. Use the stockout timeline to compare projected inventory against replenishment ETA.
+10. Export the recommended purchase order CSV with explanation reasons.
 
 ## CSV Columns
 
@@ -44,6 +48,8 @@ sku,name,category,current_stock,lead_time_days,supplier,on_order,last_14d_sales,
 SupplySense AI estimates daily demand from the last 14 days of sales, calculates days of cover from available inventory, then adjusts lead time using supplier delay and risk signals. The risk score increases when demand will exhaust inventory before replenishment can arrive, when supplier reliability is low, or when the recommended reorder quantity is large.
 
 The app also calculates safety stock and target stock levels, then recommends a reorder quantity and estimated cash requirement. The `Optimize Model` control uses eight weeks of historical weekly demand to estimate demand volatility and tune the safety buffer, supplier risk weight, and risk score conservatism. For demo clarity, the model runs fully in the browser using JavaScript and a sample CSV dataset.
+
+The data quality panel checks required CSV fields, row count, and historical demand coverage before calibration. This reflects a real deployment concern: inventory planning models are only useful when SKU, inventory, order, demand, and supplier fields are complete enough to support decision making.
 
 ## Model Assumptions
 

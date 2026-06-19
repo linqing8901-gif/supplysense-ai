@@ -214,7 +214,9 @@ select {
   color: var(--ink);
 }
 
-.calibration-panel {
+.calibration-panel,
+.readiness-panel,
+.comparison-panel {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(420px, 1fr);
   gap: 18px;
@@ -229,25 +231,37 @@ select {
   box-shadow: var(--shadow);
 }
 
-.calibration-panel h2 {
+.calibration-panel h2,
+.readiness-panel h2,
+.comparison-panel h2 {
   margin-bottom: 6px;
   font-size: 18px;
 }
 
-.calibration-panel p {
+.calibration-panel p,
+.readiness-panel p,
+.comparison-panel p {
   margin-bottom: 0;
   color: var(--muted);
   font-size: 14px;
   line-height: 1.55;
 }
 
-.calibration-grid {
+.calibration-grid,
+.readiness-grid,
+.comparison-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 
-.calibration-grid div {
+.comparison-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.calibration-grid div,
+.readiness-grid div,
+.comparison-grid div {
   min-height: 78px;
   padding: 12px;
   border: 1px solid var(--line);
@@ -255,7 +269,9 @@ select {
   background: rgba(255, 255, 255, 0.82);
 }
 
-.calibration-grid span {
+.calibration-grid span,
+.readiness-grid span,
+.comparison-grid span {
   display: block;
   margin-bottom: 10px;
   color: var(--muted);
@@ -264,8 +280,14 @@ select {
   text-transform: uppercase;
 }
 
-.calibration-grid strong {
+.calibration-grid strong,
+.readiness-grid strong,
+.comparison-grid strong {
   font-size: 20px;
+}
+
+.comparison-grid em {
+  font-style: normal;
 }
 
 .workspace {
@@ -561,7 +583,9 @@ tbody tr.selected {
     grid-template-columns: 1fr;
   }
 
-  .calibration-panel {
+  .calibration-panel,
+  .readiness-panel,
+  .comparison-panel {
     grid-template-columns: 1fr;
   }
 
@@ -601,7 +625,9 @@ tbody tr.selected {
     grid-template-columns: 1fr;
   }
 
-  .calibration-grid {
+  .calibration-grid,
+  .readiness-grid,
+  .comparison-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 

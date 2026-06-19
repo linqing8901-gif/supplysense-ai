@@ -3,6 +3,14 @@ const state = {
   rows: [],
   selectedSku: null,
   filter: "all",
+  dataQuality: {
+    rowCount: 0,
+    missingRequiredCount: 0,
+    historyCoverage: 0,
+    readiness: "Waiting",
+    missingFields: [],
+  },
+  baselineSnapshot: null,
   calibration: {
     mode: "Baseline",
     safetyBuffer: 1,
@@ -52,6 +60,17 @@ const els = {
   supplierWeight: document.getElementById("supplierWeight"),
   riskAdjustment: document.getElementById("riskAdjustment"),
   calibrationConfidence: document.getElementById("calibrationConfidence"),
+  rowsLoaded: document.getElementById("rowsLoaded"),
+  missingFields: document.getElementById("missingFields"),
+  historyCoverage: document.getElementById("historyCoverage"),
+  readinessStatus: document.getElementById("readinessStatus"),
+  readinessSummary: document.getElementById("readinessSummary"),
+  beforeCritical: document.getElementById("beforeCritical"),
+  afterCritical: document.getElementById("afterCritical"),
+  beforeReorder: document.getElementById("beforeReorder"),
+  afterReorder: document.getElementById("afterReorder"),
+  beforeCover: document.getElementById("beforeCover"),
+  afterCover: document.getElementById("afterCover"),
 };
 
 els.loadSample.addEventListener("click", async () => {
@@ -91,8 +110,10 @@ els.copySummary.addEventListener("click", async () => {
 
 function loadCsv(csvText) {
   state.rawRows = parseCsv(csvText);
+  state.dataQuality = analyzeDataQuality(state.rawRows);
   resetCalibration();
   rescoreRows();
+  state.baselineSnapshot = getPlanningSnapshot(state.rows);
   state.selectedSku = state.rows[0]?.sku ?? null;
   render();
 }
@@ -113,6 +134,47 @@ function parseCsv(csvText) {
       return row;
     }, {});
   });
+}
+
+function analyzeDataQuality(rows) {
+  const requiredFields = [
+    "sku",
+    "name",
+    "current_stock",
+    "lead_time_days",
+    "supplier",
+    "on_order",
+    "last_14d_sales",
+    "unit_cost",
+  ];
+  const missingFields = new Set();
+  let missingRequiredCount = 0;
+
+  rows.forEach((row) => {
+    requiredFields.forEach((field) => {
+      if (row[field] === undefined || row[field] === "") {
+        missingFields.add(field);
+        missingRequiredCount += 1;
+      }
+    });
+  });
+
+  const historyRows = rows.filter((row) => getHistoricalDemand(row).length >= 4).length;
+  const historyCoverage = rows.length ? historyRows / rows.length : 0;
+  let readiness = "Ready";
+  if (missingRequiredCount > 0) {
+    readiness = "Needs Cleanup";
+  } else if (historyCoverage < 0.5) {
+    readiness = "Limited";
+  }
+
+  return {
+    rowCount: rows.length,
+    missingRequiredCount,
+    historyCoverage,
+    readiness,
+    missingFields: Array.from(missingFields),
+  };
 }
 
 function splitCsvLine(line) {
@@ -259,11 +321,28 @@ function optimizeModelFromHistory() {
 function render() {
   const filteredRows = state.filter === "all" ? state.rows : state.rows.filter((row) => row.riskLevel === state.filter);
   renderMetrics();
+  renderDataQuality();
   renderCalibration();
+  renderComparison();
   renderTable(filteredRows);
   const selectedRow = state.rows.find((row) => row.sku === state.selectedSku) ?? state.rows[0];
   renderInsight(selectedRow);
   renderTimeline(selectedRow);
+}
+
+function renderDataQuality() {
+  els.rowsLoaded.textContent = state.dataQuality.rowCount;
+  els.missingFields.textContent = state.dataQuality.missingRequiredCount;
+  els.historyCoverage.textContent = `${Math.round(state.dataQuality.historyCoverage * 100)}%`;
+  els.readinessStatus.textContent = state.dataQuality.readiness;
+
+  if (!state.dataQuality.rowCount) {
+    els.readinessSummary.textContent = "Load inventory data to validate required fields and historical coverage.";
+    return;
+  }
+
+  const missing = state.dataQuality.missingFields.length ? ` Missing fields: ${state.dataQuality.missingFields.join(", ")}.` : "";
+  els.readinessSummary.textContent = `${state.dataQuality.rowCount} rows loaded with ${Math.round(state.dataQuality.historyCoverage * 100)}% historical coverage. Calibration readiness is ${state.dataQuality.readiness}.${missing}`;
 }
 
 function renderCalibration() {
@@ -280,6 +359,18 @@ function renderCalibration() {
   }
 }
 
+function renderComparison() {
+  const current = getPlanningSnapshot(state.rows);
+  const baseline = state.baselineSnapshot ?? current;
+
+  els.beforeCritical.textContent = baseline.criticalCount;
+  els.afterCritical.textContent = current.criticalCount;
+  els.beforeReorder.textContent = money(baseline.reorderValue);
+  els.afterReorder.textContent = money(current.reorderValue);
+  els.beforeCover.textContent = `${baseline.medianCover.toFixed(1)} days`;
+  els.afterCover.textContent = `${current.medianCover.toFixed(1)} days`;
+}
+
 function renderMetrics() {
   const criticalRows = state.rows.filter((row) => row.riskLevel === "Critical");
   const riskyRows = state.rows.filter((row) => ["Critical", "High"].includes(row.riskLevel));
@@ -292,6 +383,19 @@ function renderMetrics() {
   els.reorderValue.textContent = money(sum(state.rows, (row) => row.reorderCash));
   els.medianCover.textContent = `${median.toFixed(1)} days`;
   els.supplierRisk.textContent = supplierRiskRows.length;
+}
+
+function getPlanningSnapshot(rows) {
+  const criticalCount = rows.filter((row) => row.riskLevel === "Critical").length;
+  const reorderValue = sum(rows, (row) => row.reorderCash);
+  const covers = rows.map((row) => row.daysCover).sort((a, b) => a - b);
+  const medianCover = covers.length ? covers[Math.floor(covers.length / 2)] : 0;
+
+  return {
+    criticalCount,
+    reorderValue,
+    medianCover,
+  };
 }
 
 function renderTable(rows) {
@@ -433,6 +537,7 @@ function exportPurchaseOrders() {
     "estimated_cash_need",
     "days_cover",
     "effective_lead_time_days",
+    "reason",
     "action_note",
   ];
 
@@ -447,6 +552,7 @@ function exportPurchaseOrders() {
       row.reorderCash.toFixed(2),
       row.daysCover.toFixed(1),
       row.effectiveLeadTime,
+      buildRecommendationReason(row),
       `Approve replenishment and confirm capacity with ${row.supplier}`,
     ]
       .map(csvEscape)
@@ -461,6 +567,23 @@ function exportPurchaseOrders() {
   link.click();
   URL.revokeObjectURL(url);
   showToast(`${rows.length} purchase order recommendations exported`);
+}
+
+function buildRecommendationReason(row) {
+  const reasons = [];
+  if (row.daysCover < row.effectiveLeadTime) {
+    reasons.push(`days cover ${row.daysCover.toFixed(1)} below effective lead time ${row.effectiveLeadTime}`);
+  }
+  if (row.supplierRiskScore >= 35) {
+    reasons.push(`supplier risk ${getSupplierRiskLevel(row.supplierRiskScore).toLowerCase()}`);
+  }
+  if (state.calibration.mode === "Optimized") {
+    reasons.push(`optimized calibration ${state.calibration.safetyBuffer.toFixed(2)}x safety buffer`);
+  }
+  if (!reasons.length) {
+    reasons.push("reorder recommended to maintain safety stock");
+  }
+  return reasons.join("; ");
 }
 
 function csvEscape(value) {

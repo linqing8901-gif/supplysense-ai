@@ -10,7 +10,9 @@ SupplySense AI helps planners move from static inventory tracking to proactive r
 
 I start by loading a sample inventory CSV. Each row includes stock levels, recent sales, supplier lead time, open orders, unit cost, supplier reliability, average delay, defect rate, and regional risk.
 
-The dataset also includes eight weeks of historical weekly demand. I click Optimize Model so SupplySense can tune the safety buffer, supplier risk weight, and risk scoring conservatism from recent demand volatility.
+The dataset also includes eight weeks of historical weekly demand. Before calibrating, the Data Quality panel checks whether required CSV fields are present and whether there is enough historical coverage.
+
+I click Optimize Model so SupplySense can tune the safety buffer, supplier risk weight, and risk scoring conservatism from recent demand volatility. The Before / After panel shows how baseline planning output compares with optimized assumptions.
 
 The dashboard then calculates critical SKUs, value at risk, recommended reorder value, median stock cover, and supplier risk exposure.
 
@@ -34,4 +36,4 @@ This visualization makes the risk easy to understand in a demo: if projected inv
 
 ## 2:45-3:00 - Export and Impact
 
-Finally, I export a recommended purchase order CSV. SupplySense AI turns raw inventory data into prioritized replenishment actions, helping teams reduce stockouts, protect service levels, and make supplier-aware purchasing decisions faster.
+Finally, I export a recommended purchase order CSV. The export includes a reason field so each recommendation is explainable. SupplySense AI turns raw inventory data into prioritized replenishment actions, helping teams reduce stockouts, protect service levels, and make supplier-aware purchasing decisions faster.

@@ -65,6 +65,7 @@
 
       <section class="method-note" aria-label="Model assumptions">
         <strong>Model assumptions:</strong>
+        Demo dataset is synthetic and designed to simulate supply chain planning scenarios.
         This demo uses synthetic inventory data and an interpretable heuristic model based on common planning concepts:
         days of cover, lead time, safety stock, reorder quantity, and supplier reliability. Thresholds are configurable
         demo assumptions; Optimize Model demonstrates how historical weekly demand can tune those assumptions.
@@ -93,6 +94,52 @@
           <div>
             <span>Confidence</span>
             <strong id="calibrationConfidence">Baseline</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="readiness-panel" aria-label="Data quality and calibration readiness">
+        <div>
+          <h2>Data Quality / Calibration Readiness</h2>
+          <p id="readinessSummary">Load inventory data to validate required fields and historical coverage.</p>
+        </div>
+        <div class="readiness-grid">
+          <div>
+            <span>Rows Loaded</span>
+            <strong id="rowsLoaded">0</strong>
+          </div>
+          <div>
+            <span>Missing Fields</span>
+            <strong id="missingFields">0</strong>
+          </div>
+          <div>
+            <span>History Coverage</span>
+            <strong id="historyCoverage">0%</strong>
+          </div>
+          <div>
+            <span>Readiness</span>
+            <strong id="readinessStatus">Waiting</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="comparison-panel" aria-label="Calibration before and after comparison">
+        <div>
+          <h2>Before / After Calibration</h2>
+          <p>Compare baseline planning output with the optimized assumptions after historical calibration.</p>
+        </div>
+        <div class="comparison-grid">
+          <div>
+            <span>Critical SKUs</span>
+            <strong><em id="beforeCritical">0</em> -> <em id="afterCritical">0</em></strong>
+          </div>
+          <div>
+            <span>Reorder Value</span>
+            <strong><em id="beforeReorder">$0</em> -> <em id="afterReorder">$0</em></strong>
+          </div>
+          <div>
+            <span>Median Cover</span>
+            <strong><em id="beforeCover">0 days</em> -> <em id="afterCover">0 days</em></strong>
           </div>
         </div>
       </section>
