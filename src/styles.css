@@ -17,6 +17,12 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   background:
@@ -49,9 +55,11 @@ select,
 }
 
 .app-shell {
-  width: min(1440px, 100%);
+  width: 100%;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 24px;
+  overflow-x: hidden;
 }
 
 .toolbar {
@@ -303,6 +311,7 @@ select {
 .workspace {
   display: grid;
   gap: 16px;
+  min-width: 0;
   margin-bottom: 16px;
 }
 
@@ -394,6 +403,7 @@ select {
 .table-panel {
   position: relative;
   z-index: 2;
+  min-width: 0;
 }
 
 .panel-heading {
@@ -424,7 +434,11 @@ select {
 }
 
 .table-wrap {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 table {
@@ -707,6 +721,15 @@ tbody tr.selected {
     flex-direction: column;
   }
 
+  .panel-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .panel-heading select {
+    width: 100%;
+  }
+
   h1 {
     font-size: 30px;
   }
@@ -722,6 +745,14 @@ tbody tr.selected {
 
   .metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .table-panel,
+  .timeline-panel,
+  .detail-panel,
+  .insight-panel,
+  .disclosure-panel {
+    max-width: 100%;
   }
 
   .value-strip,
@@ -744,5 +775,13 @@ tbody tr.selected {
 @media (max-width: 460px) {
   .metrics {
     grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .metric {
+    min-height: 92px;
   }
 }
