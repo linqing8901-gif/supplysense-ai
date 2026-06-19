@@ -108,7 +108,18 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 8px;
+  max-width: 760px;
+}
+
+.action-group {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid rgba(217, 225, 216, 0.85);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.68);
 }
 
 button,
@@ -124,7 +135,7 @@ select {
 button,
 .file-button {
   cursor: pointer;
-  padding: 0 16px;
+  padding: 0 14px;
   font-weight: 700;
 }
 
@@ -136,6 +147,12 @@ button:hover,
 .file-button {
   display: inline-flex;
   align-items: center;
+}
+
+.primary-action {
+  border-color: rgba(13, 111, 114, 0.35);
+  background: #eaf7f4;
+  color: var(--teal);
 }
 
 .file-button input {
@@ -770,8 +787,12 @@ tbody tr.selected {
     justify-content: stretch;
   }
 
-  .actions > * {
-    flex: 1 1 150px;
+  .action-group {
+    flex: 1 1 100%;
+  }
+
+  .action-group > * {
+    flex: 1 1 0;
     justify-content: center;
   }
 

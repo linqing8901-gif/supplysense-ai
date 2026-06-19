@@ -108,7 +108,7 @@ RTL-2012,Bluetooth Speaker,Consumer Electronics,88,19,BrightWorks Supply,20,112,
 const els = {
   csvInput: document.getElementById("csvInput"),
   loadSample: document.getElementById("loadSample"),
-  loadRetailSample: document.getElementById("loadRetailSample"),
+  demoDataset: document.getElementById("demoDataset"),
   downloadTemplate: document.getElementById("downloadTemplate"),
   optimizeModel: document.getElementById("optimizeModel"),
   exportPo: document.getElementById("exportPo"),
@@ -147,11 +147,11 @@ const els = {
 };
 
 els.loadSample.addEventListener("click", async () => {
+  if (els.demoDataset.value === "retail") {
+    await loadCsvFromPath("data/retail_inventory.csv", "Retail Demo", RETAIL_CSV);
+    return;
+  }
   await loadCsvFromPath("data/sample_inventory.csv", "Medical Demo", SAMPLE_CSV);
-});
-
-els.loadRetailSample.addEventListener("click", async () => {
-  await loadCsvFromPath("data/retail_inventory.csv", "Retail Demo", RETAIL_CSV);
 });
 
 els.downloadTemplate.addEventListener("click", () => {
