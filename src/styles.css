@@ -302,9 +302,7 @@ select {
 
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(340px, 380px);
   gap: 16px;
-  align-items: start;
   margin-bottom: 16px;
 }
 
@@ -362,9 +360,11 @@ select {
   margin: 12px;
 }
 
-.main-column {
+.detail-grid {
   display: grid;
+  grid-template-columns: minmax(340px, 0.9fr) minmax(0, 1.1fr);
   gap: 16px;
+  align-items: start;
   min-width: 0;
 }
 
@@ -575,11 +575,6 @@ tbody tr.selected {
 }
 
 .insight-panel {
-  position: sticky;
-  top: 88px;
-  z-index: 1;
-  max-width: 380px;
-  justify-self: end;
   padding-bottom: 18px;
 }
 
@@ -671,7 +666,7 @@ tbody tr.selected {
 }
 
 @media (max-width: 1040px) {
-  .workspace {
+  .detail-grid {
     grid-template-columns: 1fr;
   }
 
@@ -681,9 +676,6 @@ tbody tr.selected {
     grid-template-columns: 1fr;
   }
 
-  .insight-panel {
-    position: static;
-  }
 }
 
 @media (max-width: 760px) {
