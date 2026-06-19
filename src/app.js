@@ -497,13 +497,10 @@ function renderInsight(row) {
   els.insightText.innerHTML = `
     <p><strong>${row.riskLevel} risk:</strong> ${escapeHtml(row.name)} has ${row.daysCover.toFixed(1)} days of cover against a ${row.effectiveLeadTime}-day effective lead time.</p>
     <ul>
-      <li>Recent demand is ${row.dailyDemand.toFixed(1)} units per day based on the last 14 days.</li>
-      <li>Available supply before replenishment is ${Math.round(row.currentStock + row.onOrder).toLocaleString()} units.</li>
-      <li>Recommended reorder is ${row.reorderQty.toLocaleString()} units, requiring about ${money(row.reorderCash)}.</li>
-      <li>Order constraints: raw need ${Math.ceil(row.rawReorderQty).toLocaleString()} units, MOQ ${row.minOrderQty || 0}, pack size ${row.packSize}, warehouse capacity ${row.warehouseCapacity || "not set"}; ${escapeHtml(row.orderConstraintNote)}.</li>
-      <li>Supplier risk is ${getSupplierRiskLevel(row.supplierRiskScore)}: ${row.supplierReliability}% reliability, ${row.avgDelayDays.toFixed(1)} average delay days, ${row.defectRate.toFixed(1)}% defect rate, and ${escapeHtml(row.regionRisk)} regional risk.</li>
-      <li>Planning buffer uses ${row.safetyDays} safety days because supplier risk extends the base ${row.leadTimeDays}-day lead time.</li>
-      <li>Calibration mode is ${state.calibration.mode}, with a ${state.calibration.safetyBuffer.toFixed(2)}x safety buffer and ${state.calibration.supplierWeight.toFixed(2)}x supplier risk weight.</li>
+      <li><strong>Demand:</strong> ${row.dailyDemand.toFixed(1)} units/day with ${Math.round(row.currentStock + row.onOrder).toLocaleString()} units available before replenishment.</li>
+      <li><strong>Reorder:</strong> ${row.reorderQty.toLocaleString()} units, about ${money(row.reorderCash)}, after MOQ ${row.minOrderQty || 0}, pack size ${row.packSize}, and capacity rules.</li>
+      <li><strong>Supplier:</strong> ${getSupplierRiskLevel(row.supplierRiskScore)} risk from ${row.supplierReliability}% reliability, ${row.avgDelayDays.toFixed(1)} delay days, and ${row.defectRate.toFixed(1)}% defect rate.</li>
+      <li><strong>Calibration:</strong> ${state.calibration.mode} mode with ${row.safetyDays} safety days, ${state.calibration.safetyBuffer.toFixed(2)}x safety buffer, and ${state.calibration.supplierWeight.toFixed(2)}x supplier weight.</li>
     </ul>
     <p><strong>Action:</strong> prioritize purchase approval, confirm supplier capacity with ${escapeHtml(row.supplier)}, and monitor daily demand until the order is acknowledged.</p>
   `;
@@ -519,8 +516,8 @@ function renderTimeline(row) {
   const stockoutDay = points.find((point) => point.inventory <= 0)?.day;
   const reorderArrivalDay = row.effectiveLeadTime;
   const width = 760;
-  const height = 260;
-  const pad = { left: 56, right: 24, top: 28, bottom: 42 };
+  const height = 220;
+  const pad = { left: 56, right: 24, top: 18, bottom: 36 };
   const chartWidth = width - pad.left - pad.right;
   const chartHeight = height - pad.top - pad.bottom;
   const x = (day) => pad.left + (day / horizon) * chartWidth;

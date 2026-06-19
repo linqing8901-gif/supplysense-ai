@@ -2,6 +2,8 @@
 
 SupplySense AI is an inventory risk and replenishment copilot for the Ignite64 Supply Chain AI track. It helps supply chain planners identify SKU-level stockout risk, understand supplier-driven delays, and generate replenishment actions before service levels are impacted.
 
+![SupplySense AI dashboard preview](docs/dashboard-preview.svg)
+
 ## Problem
 
 Inventory teams often rely on static spreadsheets and delayed reports. By the time a planner notices that a fast-moving SKU is running low, supplier lead time, open order uncertainty, and regional risk may already make recovery expensive.
