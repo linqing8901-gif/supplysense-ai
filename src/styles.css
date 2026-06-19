@@ -145,7 +145,8 @@ select {
   margin-bottom: 16px;
 }
 
-.value-strip article {
+.value-strip article,
+.production-panel article {
   min-height: 112px;
   padding: 16px;
   border: 1px solid var(--line);
@@ -153,7 +154,8 @@ select {
   background: linear-gradient(180deg, #ffffff 0%, #fbfcfa 100%);
 }
 
-.value-strip span {
+.value-strip span,
+.production-panel span {
   display: block;
   margin-bottom: 10px;
   color: var(--teal);
@@ -162,11 +164,19 @@ select {
   text-transform: uppercase;
 }
 
-.value-strip p {
+.value-strip p,
+.production-panel p {
   margin-bottom: 0;
   color: var(--ink);
   font-size: 14px;
   line-height: 1.5;
+}
+
+.production-panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
 }
 
 .metrics {
@@ -344,7 +354,7 @@ select {
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 980px;
+  min-width: 1160px;
 }
 
 th,
@@ -423,6 +433,23 @@ tbody tr.selected {
 .supplier-Low {
   color: var(--green);
   background: #edf8f1;
+}
+
+.decision-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.decision-controls button {
+  min-height: 30px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.decision-controls button.active {
+  border-color: var(--teal);
+  background: #eaf7f4;
+  color: var(--teal);
 }
 
 .chart-wrap {
@@ -621,7 +648,8 @@ tbody tr.selected {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .value-strip {
+  .value-strip,
+  .production-panel {
     grid-template-columns: 1fr;
   }
 

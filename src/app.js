@@ -3,6 +3,7 @@ const state = {
   rows: [],
   selectedSku: null,
   filter: "all",
+  plannerDecisions: {},
   dataQuality: {
     rowCount: 0,
     missingRequiredCount: 0,
@@ -21,19 +22,19 @@ const state = {
   },
 };
 
-const SAMPLE_CSV = `sku,name,category,current_stock,lead_time_days,supplier,on_order,last_14d_sales,unit_cost,supplier_reliability,avg_delay_days,defect_rate,region_risk,hist_wk_8,hist_wk_7,hist_wk_6,hist_wk_5,hist_wk_4,hist_wk_3,hist_wk_2,hist_wk_1
-SKU-1001,Insulin Cold Pack,Healthcare Logistics,180,9,NorthBridge Medical,40,312,12.50,91,1.2,0.8,Low,118,132,141,149,156,168,151,161
-SKU-1002,Portable Glucose Strip,Healthcare Logistics,620,6,MedAxis Supply,150,498,4.10,95,0.4,0.5,Low,220,238,246,252,261,249,254,244
-SKU-1003,N95 Respirator Box,Protective Equipment,95,12,ShieldWorks,0,210,8.75,78,3.8,2.1,Medium,66,72,84,101,95,118,102,108
-SKU-1004,IV Starter Kit,Clinical Supplies,260,8,NorthBridge Medical,60,226,14.20,91,1.2,0.8,Low,98,104,111,108,116,123,112,114
-SKU-1005,Smart Thermometer,Devices,48,15,Quantiva Devices,20,84,19.90,71,4.6,2.8,High,20,31,28,36,42,39,46,38
-SKU-1006,Disposable Syringe Pack,Clinical Supplies,980,5,MedAxis Supply,300,770,2.40,95,0.4,0.5,Low,330,350,368,372,386,398,391,379
-SKU-1007,First Aid Refill Kit,Emergency Supplies,130,10,SafeRoute Global,50,112,7.60,82,2.2,1.2,Medium,46,50,54,52,60,57,56,61
-SKU-1008,Electrolyte Sachet,Pharmacy,340,7,VitaLink Pharma,120,392,1.20,88,1.6,0.9,Medium,146,152,178,165,190,205,198,194
-SKU-1009,Digital BP Monitor,Devices,26,18,Quantiva Devices,10,38,34.00,71,4.6,2.8,High,10,13,15,14,18,22,19,20
-SKU-1010,Wound Dressing Roll,Clinical Supplies,410,6,ShieldWorks,80,280,3.80,78,3.8,2.1,Medium,118,126,134,142,139,156,151,149
-SKU-1011,Cold Chain Label,Logistics,220,14,SafeRoute Global,0,168,0.95,82,2.2,1.2,Medium,62,68,71,78,84,88,80,86
-SKU-1012,Sanitizer Refill Can,Facility Supplies,560,5,CleanCore,200,455,5.50,93,0.8,0.4,Low,196,204,220,218,230,236,224,231`;
+const SAMPLE_CSV = `sku,name,category,current_stock,lead_time_days,supplier,on_order,last_14d_sales,unit_cost,supplier_reliability,avg_delay_days,defect_rate,region_risk,min_order_qty,pack_size,warehouse_capacity,hist_wk_8,hist_wk_7,hist_wk_6,hist_wk_5,hist_wk_4,hist_wk_3,hist_wk_2,hist_wk_1
+SKU-1001,Insulin Cold Pack,Healthcare Logistics,180,9,NorthBridge Medical,40,312,12.50,91,1.2,0.8,Low,80,20,520,118,132,141,149,156,168,151,161
+SKU-1002,Portable Glucose Strip,Healthcare Logistics,620,6,MedAxis Supply,150,498,4.10,95,0.4,0.5,Low,120,50,1100,220,238,246,252,261,249,254,244
+SKU-1003,N95 Respirator Box,Protective Equipment,95,12,ShieldWorks,0,210,8.75,78,3.8,2.1,Medium,100,25,420,66,72,84,101,95,118,102,108
+SKU-1004,IV Starter Kit,Clinical Supplies,260,8,NorthBridge Medical,60,226,14.20,91,1.2,0.8,Low,60,10,580,98,104,111,108,116,123,112,114
+SKU-1005,Smart Thermometer,Devices,48,15,Quantiva Devices,20,84,19.90,71,4.6,2.8,High,40,10,180,20,31,28,36,42,39,46,38
+SKU-1006,Disposable Syringe Pack,Clinical Supplies,980,5,MedAxis Supply,300,770,2.40,95,0.4,0.5,Low,250,100,1800,330,350,368,372,386,398,391,379
+SKU-1007,First Aid Refill Kit,Emergency Supplies,130,10,SafeRoute Global,50,112,7.60,82,2.2,1.2,Medium,40,10,340,46,50,54,52,60,57,56,61
+SKU-1008,Electrolyte Sachet,Pharmacy,340,7,VitaLink Pharma,120,392,1.20,88,1.6,0.9,Medium,150,50,820,146,152,178,165,190,205,198,194
+SKU-1009,Digital BP Monitor,Devices,26,18,Quantiva Devices,10,38,34.00,71,4.6,2.8,High,20,5,100,10,13,15,14,18,22,19,20
+SKU-1010,Wound Dressing Roll,Clinical Supplies,410,6,ShieldWorks,80,280,3.80,78,3.8,2.1,Medium,80,20,760,118,126,134,142,139,156,151,149
+SKU-1011,Cold Chain Label,Logistics,220,14,SafeRoute Global,0,168,0.95,82,2.2,1.2,Medium,100,25,460,62,68,71,78,84,88,80,86
+SKU-1012,Sanitizer Refill Can,Facility Supplies,560,5,CleanCore,200,455,5.50,93,0.8,0.4,Low,120,40,980,196,204,220,218,230,236,224,231`;
 
 const els = {
   csvInput: document.getElementById("csvInput"),
@@ -93,6 +94,22 @@ els.csvInput.addEventListener("change", async (event) => {
 els.riskFilter.addEventListener("change", (event) => {
   state.filter = event.target.value;
   render();
+});
+
+els.inventoryRows.addEventListener("click", (event) => {
+  const decisionButton = event.target.closest("button[data-decision]");
+  if (decisionButton) {
+    state.plannerDecisions[decisionButton.dataset.sku] = decisionButton.dataset.decision;
+    render();
+    showToast(`${decisionButton.dataset.sku} marked ${decisionButton.dataset.decision}`);
+    return;
+  }
+
+  const row = event.target.closest("tr[data-sku]");
+  if (row) {
+    state.selectedSku = row.dataset.sku;
+    render();
+  }
 });
 
 els.exportPo.addEventListener("click", () => {
@@ -208,6 +225,9 @@ function scoreInventoryRow(row) {
   const avgDelayDays = number(row.avg_delay_days);
   const defectRate = number(row.defect_rate);
   const regionRisk = row.region_risk || "Low";
+  const minOrderQty = number(row.min_order_qty);
+  const packSize = Math.max(1, number(row.pack_size) || 1);
+  const warehouseCapacity = number(row.warehouse_capacity);
   const dailyDemand = Math.max(last14dSales / 14, 0.1);
   const availableBeforeReplenishment = currentStock + onOrder;
   const daysCover = availableBeforeReplenishment / dailyDemand;
@@ -216,7 +236,9 @@ function scoreInventoryRow(row) {
   const adjustedSupplierRisk = supplierRiskScore * state.calibration.supplierWeight;
   const safetyDays = Math.max(3, Math.ceil(effectiveLeadTime * (0.3 + adjustedSupplierRisk / 250) * state.calibration.safetyBuffer));
   const targetStock = Math.ceil(dailyDemand * (effectiveLeadTime + safetyDays + 7));
-  const reorderQty = Math.max(0, targetStock - availableBeforeReplenishment);
+  const rawReorderQty = Math.max(0, targetStock - availableBeforeReplenishment);
+  const constrainedOrder = applyOrderConstraints(rawReorderQty, minOrderQty, packSize, warehouseCapacity, availableBeforeReplenishment);
+  const reorderQty = constrainedOrder.quantity;
   const reorderCash = reorderQty * unitCost;
   const leadTimeGap = effectiveLeadTime - daysCover;
   const riskScore = Math.max(
@@ -239,12 +261,17 @@ function scoreInventoryRow(row) {
     avgDelayDays,
     defectRate,
     regionRisk,
+    minOrderQty,
+    packSize,
+    warehouseCapacity,
     supplierRiskScore,
     effectiveLeadTime,
     dailyDemand,
     daysCover,
     safetyDays,
     targetStock,
+    rawReorderQty,
+    orderConstraintNote: constrainedOrder.note,
     reorderQty,
     reorderCash,
     riskScore,
@@ -271,6 +298,38 @@ function getSupplierRiskLevel(score) {
   if (score >= 55) return "High";
   if (score >= 35) return "Medium";
   return "Low";
+}
+
+function applyOrderConstraints(rawQty, minOrderQty, packSize, warehouseCapacity, availableSupply) {
+  if (rawQty <= 0) {
+    return { quantity: 0, note: "No reorder needed" };
+  }
+
+  const notes = [];
+  let quantity = rawQty;
+  if (minOrderQty > 0 && quantity < minOrderQty) {
+    quantity = minOrderQty;
+    notes.push(`raised to MOQ ${minOrderQty}`);
+  }
+
+  const packedQty = Math.ceil(quantity / packSize) * packSize;
+  if (packedQty !== quantity) {
+    notes.push(`rounded to pack size ${packSize}`);
+  }
+  quantity = packedQty;
+
+  if (warehouseCapacity > 0) {
+    const capacityRoom = Math.max(0, warehouseCapacity - availableSupply);
+    if (quantity > capacityRoom) {
+      quantity = Math.max(0, Math.floor(capacityRoom / packSize) * packSize);
+      notes.push(`capped by warehouse capacity ${warehouseCapacity}`);
+    }
+  }
+
+  return {
+    quantity,
+    note: notes.length ? notes.join("; ") : "No order constraints applied",
+  };
 }
 
 function resetCalibration() {
@@ -404,6 +463,8 @@ function renderTable(rows) {
   rows.forEach((row) => {
     const tr = document.createElement("tr");
     tr.className = row.sku === state.selectedSku ? "selected" : "";
+    tr.dataset.sku = row.sku;
+    const decision = state.plannerDecisions[row.sku] ?? "Review";
     tr.innerHTML = `
       <td><strong>${escapeHtml(row.sku)}</strong></td>
       <td>${escapeHtml(row.name)}<br><small>${escapeHtml(row.supplier)}</small></td>
@@ -413,11 +474,17 @@ function renderTable(rows) {
       <td><span class="supplier-pill supplier-${getSupplierRiskLevel(row.supplierRiskScore)}">${getSupplierRiskLevel(row.supplierRiskScore)}</span></td>
       <td>${row.reorderQty.toLocaleString()}</td>
       <td>${money(row.reorderCash)}</td>
+      <td>
+        <div class="decision-controls" aria-label="Planner decision for ${escapeHtml(row.sku)}">
+          ${["Approve", "Review", "Override"]
+            .map(
+              (option) =>
+                `<button type="button" class="${decision === option ? "active" : ""}" data-sku="${escapeHtml(row.sku)}" data-decision="${option}">${option}</button>`,
+            )
+            .join("")}
+        </div>
+      </td>
     `;
-    tr.addEventListener("click", () => {
-      state.selectedSku = row.sku;
-      render();
-    });
     els.inventoryRows.appendChild(tr);
   });
 }
@@ -433,6 +500,7 @@ function renderInsight(row) {
       <li>Recent demand is ${row.dailyDemand.toFixed(1)} units per day based on the last 14 days.</li>
       <li>Available supply before replenishment is ${Math.round(row.currentStock + row.onOrder).toLocaleString()} units.</li>
       <li>Recommended reorder is ${row.reorderQty.toLocaleString()} units, requiring about ${money(row.reorderCash)}.</li>
+      <li>Order constraints: raw need ${Math.ceil(row.rawReorderQty).toLocaleString()} units, MOQ ${row.minOrderQty || 0}, pack size ${row.packSize}, warehouse capacity ${row.warehouseCapacity || "not set"}; ${escapeHtml(row.orderConstraintNote)}.</li>
       <li>Supplier risk is ${getSupplierRiskLevel(row.supplierRiskScore)}: ${row.supplierReliability}% reliability, ${row.avgDelayDays.toFixed(1)} average delay days, ${row.defectRate.toFixed(1)}% defect rate, and ${escapeHtml(row.regionRisk)} regional risk.</li>
       <li>Planning buffer uses ${row.safetyDays} safety days because supplier risk extends the base ${row.leadTimeDays}-day lead time.</li>
       <li>Calibration mode is ${state.calibration.mode}, with a ${state.calibration.safetyBuffer.toFixed(2)}x safety buffer and ${state.calibration.supplierWeight.toFixed(2)}x supplier risk weight.</li>
@@ -533,11 +601,16 @@ function exportPurchaseOrders() {
     "supplier",
     "risk_level",
     "supplier_risk",
+    "raw_reorder_qty",
     "recommended_reorder_qty",
+    "min_order_qty",
+    "pack_size",
+    "warehouse_capacity",
     "estimated_cash_need",
     "days_cover",
     "effective_lead_time_days",
     "reason",
+    "planner_decision",
     "action_note",
   ];
 
@@ -548,11 +621,16 @@ function exportPurchaseOrders() {
       row.supplier,
       row.riskLevel,
       getSupplierRiskLevel(row.supplierRiskScore),
+      Math.ceil(row.rawReorderQty),
       row.reorderQty,
+      row.minOrderQty,
+      row.packSize,
+      row.warehouseCapacity || "",
       row.reorderCash.toFixed(2),
       row.daysCover.toFixed(1),
       row.effectiveLeadTime,
       buildRecommendationReason(row),
+      state.plannerDecisions[row.sku] ?? "Review",
       `Approve replenishment and confirm capacity with ${row.supplier}`,
     ]
       .map(csvEscape)
@@ -579,6 +657,9 @@ function buildRecommendationReason(row) {
   }
   if (state.calibration.mode === "Optimized") {
     reasons.push(`optimized calibration ${state.calibration.safetyBuffer.toFixed(2)}x safety buffer`);
+  }
+  if (row.orderConstraintNote !== "No order constraints applied") {
+    reasons.push(row.orderConstraintNote);
   }
   if (!reasons.length) {
     reasons.push("reorder recommended to maintain safety stock");

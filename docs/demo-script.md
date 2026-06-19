@@ -18,13 +18,13 @@ The dashboard then calculates critical SKUs, value at risk, recommended reorder 
 
 ## 0:55-1:35 - Priority Queue
 
-The priority queue ranks SKUs by stockout risk and replenishment urgency. For each item, SupplySense shows days of cover, effective lead time, supplier risk, recommended reorder quantity, and cash needed.
+The priority queue ranks SKUs by stockout risk and replenishment urgency. For each item, SupplySense shows days of cover, effective lead time, supplier risk, recommended reorder quantity, cash needed, and planner decision status.
 
 This lets a planner focus on the highest-impact actions instead of scanning a spreadsheet manually.
 
 ## 1:35-2:15 - Planner Brief
 
-When I select a high-risk SKU, the planner brief explains the recommendation in business language. It shows recent demand, available supply, reorder quantity, estimated cash requirement, supplier reliability, average delay, defect rate, and regional risk.
+When I select a high-risk SKU, the planner brief explains the recommendation in business language. It shows recent demand, available supply, reorder quantity, estimated cash requirement, minimum order quantity, pack size, warehouse capacity, supplier reliability, average delay, defect rate, and regional risk.
 
 The goal is not just to output a score. The goal is to explain the operational reason behind the score so a planner can act with confidence.
 
@@ -36,4 +36,4 @@ This visualization makes the risk easy to understand in a demo: if projected inv
 
 ## 2:45-3:00 - Export and Impact
 
-Finally, I export a recommended purchase order CSV. The export includes a reason field so each recommendation is explainable. SupplySense AI turns raw inventory data into prioritized replenishment actions, helping teams reduce stockouts, protect service levels, and make supplier-aware purchasing decisions faster.
+Finally, I mark planner decisions and export a recommended purchase order CSV. The export includes a reason field and order constraints so each recommendation is explainable. SupplySense AI turns raw inventory data into prioritized replenishment actions, helping teams reduce stockouts, protect service levels, and make supplier-aware purchasing decisions faster.
