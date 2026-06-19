@@ -84,6 +84,8 @@ AI assistance was used during development for ideation, interface copy, and impl
 - `docs/demo-script.md`: 3-minute demo video script
 - `data/sample_inventory.csv`: medical supply demo dataset
 - `data/retail_inventory.csv`: retail inventory demo dataset
+- `data/uci_online_retail_converted.csv`: converted public UCI Online Retail test dataset
+- `scripts/convert_uci_online_retail.py`: reproducible converter from UCI transaction data to SupplySense CSV format
 
 ## Future Enhancements
 
