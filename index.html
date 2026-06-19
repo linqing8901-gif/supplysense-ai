@@ -20,14 +20,14 @@
               <span>Upload CSV</span>
               <input id="csvInput" type="file" accept=".csv,text/csv" />
             </label>
-            <button id="downloadTemplate" type="button" title="Download the required CSV column template">Template</button>
+            <button id="downloadTemplate" class="text-action" type="button" title="Download the required CSV column template">Download template</button>
           </div>
           <div class="action-group">
             <select id="demoDataset" aria-label="Demo dataset">
+              <option value="">Load demo data</option>
               <option value="medical">Medical demo</option>
               <option value="retail">Retail demo</option>
             </select>
-            <button id="loadSample" type="button" title="Load selected demo data">Load Demo</button>
           </div>
           <div class="action-group">
             <button id="optimizeModel" type="button" title="Calibrate thresholds from historical demand">Optimize Model</button>

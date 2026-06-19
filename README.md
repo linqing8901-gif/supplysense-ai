@@ -32,7 +32,7 @@ SupplySense AI turns operational inventory data into a prioritized decision queu
 ## Demo Flow
 
 1. Open `index.html` in a browser.
-2. Choose `Medical demo` or `Retail demo`, click `Load Demo`, or upload a CSV with the same columns as the downloaded template.
+2. Choose `Medical demo` or `Retail demo` from the demo selector, or upload a CSV with the same columns as the downloaded template.
 3. Use `Download CSV Template` if you want to test your own SKU-level inventory file.
 4. Review the top risk metrics, project value summary, and upload validation result.
 5. Review the data quality and calibration readiness panel.

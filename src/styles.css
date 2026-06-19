@@ -109,7 +109,7 @@ h1 {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
-  max-width: 760px;
+  max-width: 700px;
 }
 
 .action-group {
@@ -152,6 +152,20 @@ button:hover,
 .primary-action {
   border-color: rgba(13, 111, 114, 0.35);
   background: #eaf7f4;
+  color: var(--teal);
+}
+
+.text-action {
+  min-height: 42px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.text-action:hover {
+  border-color: transparent;
   color: var(--teal);
 }
 
