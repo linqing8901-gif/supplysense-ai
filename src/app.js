@@ -360,7 +360,8 @@ function scoreInventoryRow(row) {
   const minOrderQty = number(row.min_order_qty);
   const packSize = Math.max(1, number(row.pack_size) || 1);
   const warehouseCapacity = number(row.warehouse_capacity);
-  const dailyDemand = Math.max(last14dSales / 14, 0.1);
+  const forecast = forecastDailyDemand(row, last14dSales);
+  const dailyDemand = forecast.dailyDemand;
   const availableBeforeReplenishment = currentStock + onOrder;
   const daysCover = availableBeforeReplenishment / dailyDemand;
   const supplierRiskScore = getSupplierRiskScore(supplierReliability, avgDelayDays, defectRate, regionRisk);
@@ -399,6 +400,9 @@ function scoreInventoryRow(row) {
     supplierRiskScore,
     effectiveLeadTime,
     dailyDemand,
+    forecastMethod: forecast.method,
+    forecastWeeklyDemand: forecast.weeklyDemand,
+    recentDailyDemand: forecast.recentDailyDemand,
     daysCover,
     safetyDays,
     targetStock,
@@ -631,7 +635,7 @@ function renderInsight(row) {
   els.insightText.innerHTML = `
     <p><strong>${row.riskLevel} risk:</strong> ${escapeHtml(row.name)} has ${row.daysCover.toFixed(1)} days of cover against a ${row.effectiveLeadTime}-day effective lead time.</p>
     <ul>
-      <li><strong>Demand:</strong> ${row.dailyDemand.toFixed(1)} units/day with ${Math.round(row.currentStock + row.onOrder).toLocaleString()} units available before replenishment.</li>
+      <li><strong>Demand:</strong> ${row.dailyDemand.toFixed(1)} units/day from ${escapeHtml(row.forecastMethod)} with ${Math.round(row.currentStock + row.onOrder).toLocaleString()} units available before replenishment.</li>
       <li><strong>Reorder:</strong> ${row.reorderQty.toLocaleString()} units, about ${money(row.reorderCash)}, after MOQ ${row.minOrderQty || 0}, pack size ${row.packSize}, and capacity rules.</li>
       <li><strong>Supplier:</strong> ${getSupplierRiskLevel(row.supplierRiskScore)} risk from ${row.supplierReliability}% reliability, ${row.avgDelayDays.toFixed(1)} delay days, and ${row.defectRate.toFixed(1)}% defect rate.</li>
       <li><strong>Calibration:</strong> ${state.calibration.mode} mode with ${row.safetyDays} safety days, ${state.calibration.safetyBuffer.toFixed(2)}x safety buffer, and ${state.calibration.supplierWeight.toFixed(2)}x supplier weight.</li>
@@ -716,7 +720,7 @@ function buildSummary() {
   const reorder = money(sum(state.rows, (row) => row.reorderCash));
   const supplierRisk = state.rows.filter((row) => row.supplierRiskScore >= 35).length;
 
-  return `SupplySense AI is a supply chain decision assistant that predicts SKU-level stockout risk from current inventory, recent demand, open orders, unit cost, supplier lead time, and supplier reliability signals. In the demo dataset, it identifies ${critical} critical SKUs, ${high} high-risk SKUs, and ${supplierRisk} supplier-risk exposures, then recommends ${reorder} in replenishment actions. The system turns operational data into a prioritized planner queue, calculates days of cover, estimates reorder quantities with safety stock, and explains each recommendation in business language so inventory teams can act before service levels are impacted.`;
+  return `SupplySense AI is a supply chain decision assistant that predicts SKU-level stockout risk from current inventory, forecast demand, open orders, unit cost, supplier lead time, and supplier reliability signals. In the demo dataset, it identifies ${critical} critical SKUs, ${high} high-risk SKUs, and ${supplierRisk} supplier-risk exposures, then recommends ${reorder} in replenishment actions. The system turns operational data into a prioritized planner queue, calculates days of cover, estimates reorder quantities with safety stock, and explains each recommendation in business language so inventory teams can act before service levels are impacted.`;
 }
 
 function exportPurchaseOrders() {
@@ -792,6 +796,7 @@ function buildRecommendationReason(row) {
   if (row.supplierRiskScore >= 35) {
     reasons.push(`supplier risk ${getSupplierRiskLevel(row.supplierRiskScore).toLowerCase()}`);
   }
+  reasons.push(`demand forecast ${row.forecastMethod}`);
   if (state.calibration.mode === "Calibrated") {
     reasons.push(`session calibration ${state.calibration.safetyBuffer.toFixed(2)}x safety buffer`);
   }
@@ -811,6 +816,32 @@ function csvEscape(value) {
 
 function getHistoricalDemand(row) {
   return Array.from({ length: 8 }, (_, index) => number(row[`hist_wk_${8 - index}`])).filter((value) => value > 0);
+}
+
+function forecastDailyDemand(row, last14dSales) {
+  const recentDailyDemand = Math.max(last14dSales / 14, 0.1);
+  const history = getHistoricalDemand(row);
+  if (history.length < 4) {
+    return {
+      dailyDemand: recentDailyDemand,
+      weeklyDemand: recentDailyDemand * 7,
+      recentDailyDemand,
+      method: "14-day sales velocity",
+    };
+  }
+
+  const smoothedWeeklyDemand = exponentialSmoothing(history, 0.45);
+  const blendedWeeklyDemand = smoothedWeeklyDemand * 0.72 + recentDailyDemand * 7 * 0.28;
+  return {
+    dailyDemand: Math.max(blendedWeeklyDemand / 7, 0.1),
+    weeklyDemand: blendedWeeklyDemand,
+    recentDailyDemand,
+    method: "8-week exponential smoothing",
+  };
+}
+
+function exponentialSmoothing(values, alpha) {
+  return values.slice(1).reduce((forecast, value) => alpha * value + (1 - alpha) * forecast, values[0]);
 }
 
 function coefficientOfVariation(values) {

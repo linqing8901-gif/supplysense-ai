@@ -15,6 +15,7 @@ SupplySense AI turns operational inventory data into a prioritized decision queu
 ## Features
 
 - SKU-level stockout risk scoring
+- Exponential smoothing demand forecast with recent-velocity fallback
 - Days of cover and effective lead time calculation
 - Supplier risk scoring from reliability, delay, defect, and region signals
 - History-informed calibration for safety buffer, supplier weight, and risk conservatism
@@ -53,7 +54,7 @@ The app validates file type, row count, missing required values, and historical 
 
 ## How It Works
 
-SupplySense AI estimates daily demand from the last 14 days of sales, calculates days of cover from available inventory, then adjusts lead time using supplier delay and risk signals. The risk score increases when demand will exhaust inventory before replenishment can arrive, when supplier reliability is low, or when the recommended reorder quantity is large.
+SupplySense AI forecasts daily demand with eight weeks of historical weekly demand using exponential smoothing, blended with recent 14-day sales velocity. If historical coverage is not available, it falls back to the 14-day velocity. It then calculates days of cover from available inventory and adjusts lead time using supplier delay and risk signals. The risk score increases when demand will exhaust inventory before replenishment can arrive, when supplier reliability is low, or when the recommended reorder quantity is large.
 
 The app also calculates safety stock and target stock levels, then recommends a reorder quantity and estimated cash requirement. Recommended order quantities are adjusted for minimum order quantity, pack size, and warehouse capacity constraints. The optional `Calibrate Model` control in `Model & Readiness` uses eight weeks of historical weekly demand to estimate demand volatility and tune the safety buffer, supplier risk weight, and risk score conservatism for the current analysis session. For demo clarity, the model runs fully in the browser using JavaScript and demo CSV datasets.
 
@@ -88,7 +89,7 @@ AI assistance was used during development for ideation, interface copy, and impl
 
 ## Future Enhancements
 
-- Add richer demand forecast methods
+- Add seasonality-aware demand forecast methods
 - Connect an LLM API for dynamic planner explanations
 - Add supplier alternatives and second-source recommendations
 - Add demand velocity comparison across categories

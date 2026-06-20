@@ -10,7 +10,7 @@ SupplySense AI helps planners move from static inventory tracking to proactive r
 
 I start by showing that SupplySense can load either built-in demo data or a user-provided CSV. The template download shows the required columns, and each row includes stock levels, recent sales, supplier lead time, open orders, unit cost, supplier reliability, average delay, defect rate, and regional risk.
 
-The dataset also includes eight weeks of historical weekly demand. Before calibrating, the Data Quality panel checks whether required CSV fields are present and whether there is enough historical coverage.
+The dataset also includes eight weeks of historical weekly demand. SupplySense uses exponential smoothing over that history, with recent 14-day sales velocity as a fallback, to forecast daily demand. Before calibrating, the Data Quality panel checks whether required CSV fields are present and whether there is enough historical coverage.
 
 The main workflow does not require manual calibration. If I open Model & Readiness, the optional Calibrate Model control shows how SupplySense can tune the current session's safety buffer, supplier risk weight, and risk scoring conservatism from recent demand volatility. In production, this calibration would normally run automatically or on a schedule, with approved calibration profiles saved and versioned.
 
@@ -24,7 +24,7 @@ This lets a planner focus on the highest-impact actions instead of scanning a sp
 
 ## 1:35-2:15 - Planner Brief
 
-When I select a high-risk SKU, the planner brief explains the recommendation in business language. It shows recent demand, available supply, reorder quantity, estimated cash requirement, minimum order quantity, pack size, warehouse capacity, supplier reliability, average delay, defect rate, and regional risk.
+When I select a high-risk SKU, the planner brief explains the recommendation in business language. It shows forecast demand, available supply, reorder quantity, estimated cash requirement, minimum order quantity, pack size, warehouse capacity, supplier reliability, average delay, defect rate, and regional risk.
 
 The goal is not just to output a score. The goal is to explain the operational reason behind the score so a planner can act with confidence.
 
