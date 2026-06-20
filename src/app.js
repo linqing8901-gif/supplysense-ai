@@ -202,7 +202,7 @@ els.exportPo.addEventListener("click", () => {
 });
 
 els.optimizeModel.addEventListener("click", () => {
-  optimizeModelFromHistory();
+  calibrateModelFromHistory();
 });
 
 els.copySummary.addEventListener("click", async () => {
@@ -475,15 +475,15 @@ function resetCalibration() {
   };
 }
 
-function optimizeModelFromHistory() {
+function calibrateModelFromHistory() {
   if (!state.rawRows.length) {
-    showToast("Load inventory data before optimizing");
+    showToast("Load inventory data before calibration");
     return;
   }
 
   const historyRows = state.rawRows.filter((row) => getHistoricalDemand(row).length >= 4);
   if (historyRows.length < Math.max(4, state.rawRows.length * 0.5)) {
-    showToast("Not enough historical demand fields to optimize");
+    showToast("Not enough historical demand fields to calibrate");
     return;
   }
 
@@ -495,7 +495,7 @@ function optimizeModelFromHistory() {
   const riskAdjustment = Math.round(clamp(volatility * 18 + baselineStockoutExposure * 8 - 2, 0, 10));
 
   state.calibration = {
-    mode: "Optimized",
+    mode: "Calibrated",
     safetyBuffer,
     supplierWeight,
     riskAdjustment,
@@ -506,7 +506,7 @@ function optimizeModelFromHistory() {
   rescoreRows();
   state.selectedSku = state.rows[0]?.sku ?? state.selectedSku;
   render();
-  showToast("Model optimized from historical demand");
+  showToast("Session calibration applied");
 }
 
 function render() {
@@ -544,11 +544,11 @@ function renderCalibration() {
   els.riskAdjustment.textContent = state.calibration.riskAdjustment ? `+${state.calibration.riskAdjustment} risk pts` : "Baseline";
   els.calibrationConfidence.textContent = state.calibration.confidence;
 
-  if (state.calibration.mode === "Optimized") {
-    els.calibrationSummary.textContent = `Optimized mode used 8-week demand history to estimate ${(state.calibration.demandVolatility * 100).toFixed(1)}% demand volatility, then tuned safety buffer, supplier risk weight, and risk scoring conservatism.`;
+  if (state.calibration.mode === "Calibrated") {
+    els.calibrationSummary.textContent = `Session calibration used 8-week demand history to estimate ${(state.calibration.demandVolatility * 100).toFixed(1)}% demand volatility, then tuned safety buffer, supplier risk weight, and risk scoring conservatism. Demo calibration is not persisted after refresh; a production version would save approved calibration profiles.`;
   } else {
     els.calibrationSummary.textContent =
-      "Baseline mode uses transparent default thresholds. Click Optimize Model to tune buffers using historical weekly demand and supplier risk signals.";
+      "Baseline mode uses transparent default thresholds. Click Calibrate Model to tune this session's safety buffer and supplier-risk weight from historical weekly demand. Production deployments would save approved calibration profiles.";
   }
 }
 
@@ -792,8 +792,8 @@ function buildRecommendationReason(row) {
   if (row.supplierRiskScore >= 35) {
     reasons.push(`supplier risk ${getSupplierRiskLevel(row.supplierRiskScore).toLowerCase()}`);
   }
-  if (state.calibration.mode === "Optimized") {
-    reasons.push(`optimized calibration ${state.calibration.safetyBuffer.toFixed(2)}x safety buffer`);
+  if (state.calibration.mode === "Calibrated") {
+    reasons.push(`session calibration ${state.calibration.safetyBuffer.toFixed(2)}x safety buffer`);
   }
   if (row.orderConstraintNote !== "No order constraints applied") {
     reasons.push(row.orderConstraintNote);

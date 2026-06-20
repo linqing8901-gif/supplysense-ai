@@ -21,7 +21,7 @@ SupplySense AI turns operational inventory data into a prioritized decision queu
 - Data quality and calibration readiness checks for uploaded CSV files
 - Downloadable CSV template for testing user-provided inventory data
 - Two built-in demo datasets: medical supply and retail inventory
-- Before/after comparison for baseline vs optimized planning outputs
+- Before/after comparison for baseline vs session-calibrated planning outputs
 - Recommended reorder quantity and estimated cash need with MOQ, pack size, and warehouse capacity constraints
 - Planner workflow actions: Approve, Review, and Override
 - Stockout timeline visualization for the selected SKU
@@ -36,8 +36,8 @@ SupplySense AI turns operational inventory data into a prioritized decision queu
 3. Use `Download CSV Template` if you want to test your own SKU-level inventory file.
 4. Review the top risk metrics, project value summary, and upload validation result.
 5. Review the data quality and calibration readiness panel.
-6. Click `Optimize Model` to tune risk assumptions from historical weekly demand.
-7. Compare baseline and optimized planning outputs.
+6. Click `Calibrate Model` to tune this session's planning assumptions from historical weekly demand.
+7. Compare baseline and calibrated planning outputs.
 8. Select a high-risk SKU in the priority queue.
 9. Read the planner brief and supplier risk explanation.
 10. Use the stockout timeline to compare projected inventory against replenishment ETA.
@@ -56,7 +56,7 @@ The app validates file type, row count, missing required values, and historical 
 
 SupplySense AI estimates daily demand from the last 14 days of sales, calculates days of cover from available inventory, then adjusts lead time using supplier delay and risk signals. The risk score increases when demand will exhaust inventory before replenishment can arrive, when supplier reliability is low, or when the recommended reorder quantity is large.
 
-The app also calculates safety stock and target stock levels, then recommends a reorder quantity and estimated cash requirement. Recommended order quantities are adjusted for minimum order quantity, pack size, and warehouse capacity constraints. The `Optimize Model` control uses eight weeks of historical weekly demand to estimate demand volatility and tune the safety buffer, supplier risk weight, and risk score conservatism. For demo clarity, the model runs fully in the browser using JavaScript and demo CSV datasets.
+The app also calculates safety stock and target stock levels, then recommends a reorder quantity and estimated cash requirement. Recommended order quantities are adjusted for minimum order quantity, pack size, and warehouse capacity constraints. The `Calibrate Model` control uses eight weeks of historical weekly demand to estimate demand volatility and tune the safety buffer, supplier risk weight, and risk score conservatism for the current analysis session. For demo clarity, the model runs fully in the browser using JavaScript and demo CSV datasets.
 
 The data quality panel checks required CSV fields, row count, and historical demand coverage before calibration. This reflects a real deployment concern: inventory planning models are only useful when SKU, inventory, order, demand, and supplier fields are complete enough to support decision making.
 
@@ -64,7 +64,7 @@ The data quality panel checks required CSV fields, row count, and historical dem
 
 The current demo uses synthetic inventory and supplier-risk data designed to simulate realistic supply chain planning scenarios. The scoring model is an interpretable heuristic based on common inventory planning concepts, including days of cover, lead time, safety stock, reorder quantity, and supplier reliability.
 
-The `Critical`, `High`, `Watch`, and `Stable` thresholds are configurable demo assumptions, not fixed industry standards. The current optimization step demonstrates how historical demand can tune these assumptions. In a production deployment, calibration would use larger historical datasets, supplier performance records, target service levels, and business risk tolerance.
+The `Critical`, `High`, `Watch`, and `Stable` thresholds are configurable demo assumptions, not fixed industry standards. The current calibration step demonstrates how historical demand can tune these assumptions for the current browser session. In a production deployment, calibration would use larger historical datasets, supplier performance records, target service levels, and business risk tolerance, then save approved calibration profiles with version history and audit metadata.
 
 ## Tech Stack
 
