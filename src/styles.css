@@ -114,6 +114,7 @@ h1 {
 
 .action-group {
   display: inline-flex;
+  align-items: center;
   flex-wrap: nowrap;
   gap: 6px;
   padding: 4px;
@@ -130,13 +131,14 @@ select {
   border-radius: 8px;
   background: var(--surface);
   color: var(--ink);
+  font-size: 15px;
+  font-weight: 750;
 }
 
 button,
 .file-button {
   cursor: pointer;
   padding: 0 14px;
-  font-weight: 700;
 }
 
 button:hover,
@@ -160,8 +162,6 @@ button:hover,
   border-color: transparent;
   background: transparent;
   color: var(--muted);
-  font-size: 13px;
-  font-weight: 800;
 }
 
 .text-action:hover {
