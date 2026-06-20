@@ -696,8 +696,8 @@ tbody tr.selected {
 }
 
 .summary-box {
-  margin: 18px;
-  padding: 16px;
+  margin: 14px 18px 18px;
+  padding: 14px 16px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fbfcfa;
@@ -713,7 +713,7 @@ tbody tr.selected {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .summary-heading button {
@@ -722,11 +722,23 @@ tbody tr.selected {
   font-size: 12px;
 }
 
+.summary-kicker {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .summary-box p {
+  display: -webkit-box;
+  overflow: hidden;
   margin-bottom: 0;
   color: var(--muted);
   font-size: 14px;
   line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .status-toast {
