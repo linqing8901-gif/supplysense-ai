@@ -328,6 +328,13 @@ select {
   line-height: 1.55;
 }
 
+.calibration-action {
+  margin-top: 14px;
+  border-color: rgba(13, 111, 114, 0.32);
+  background: #eaf7f4;
+  color: var(--teal);
+}
+
 .calibration-grid,
 .readiness-grid,
 .comparison-grid {

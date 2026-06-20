@@ -12,7 +12,7 @@ I start by showing that SupplySense can load either built-in demo data or a user
 
 The dataset also includes eight weeks of historical weekly demand. Before calibrating, the Data Quality panel checks whether required CSV fields are present and whether there is enough historical coverage.
 
-I click Calibrate Model so SupplySense can tune the current session's safety buffer, supplier risk weight, and risk scoring conservatism from recent demand volatility. The Before / After panel shows how baseline planning output compares with calibrated assumptions. In this browser demo, calibration applies to the current analysis session; in production, approved calibration profiles would be saved and versioned.
+The main workflow does not require manual calibration. If I open Model & Readiness, the optional Calibrate Model control shows how SupplySense can tune the current session's safety buffer, supplier risk weight, and risk scoring conservatism from recent demand volatility. In production, this calibration would normally run automatically or on a schedule, with approved calibration profiles saved and versioned.
 
 The dashboard then calculates critical SKUs, value at risk, recommended reorder value, median stock cover, and supplier risk exposure.
 

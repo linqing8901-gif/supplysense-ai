@@ -30,7 +30,6 @@
             </select>
           </div>
           <div class="action-group">
-            <button id="optimizeModel" type="button" title="Tune this session's planning parameters from historical demand">Calibrate Model</button>
             <button id="exportPo" type="button" title="Export recommended purchase orders">Export PO CSV</button>
           </div>
         </div>
@@ -76,7 +75,7 @@
 
       <section class="demo-flow" aria-label="Recommended demo flow">
         <strong>Recommended demo flow:</strong>
-        Upload CSV or choose a demo -> Review Data Validation -> Calibrate Model -> Select a Critical SKU -> Export PO CSV
+        Upload CSV or choose a demo -> Review Data Validation -> Select a Critical SKU -> Export PO CSV
       </section>
 
       <section id="validationBanner" class="validation-banner" aria-label="CSV validation result">
@@ -178,7 +177,7 @@
           Demo datasets are synthetic and designed to simulate supply chain planning scenarios.
           This demo uses synthetic inventory data and an interpretable heuristic model based on common planning concepts:
           days of cover, lead time, safety stock, reorder quantity, and supplier reliability. Thresholds are configurable
-          demo assumptions; Calibrate Model demonstrates how historical weekly demand can tune those assumptions for the current analysis session.
+          demo assumptions; the calibration control below demonstrates how historical weekly demand can tune those assumptions for the current analysis session.
         </section>
 
         <section class="calibration-panel" aria-label="Historical model calibration">
@@ -187,6 +186,7 @@
             <p id="calibrationSummary">
               Baseline mode uses transparent default thresholds. Click Calibrate Model to tune this session's safety buffer and supplier-risk weight from historical weekly demand.
             </p>
+            <button id="optimizeModel" class="calibration-action" type="button" title="Advanced demo control for session calibration">Calibrate Model</button>
           </div>
           <div class="calibration-grid">
             <div>

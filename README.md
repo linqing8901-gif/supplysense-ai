@@ -36,13 +36,12 @@ SupplySense AI turns operational inventory data into a prioritized decision queu
 3. Use `Download CSV Template` if you want to test your own SKU-level inventory file.
 4. Review the top risk metrics, project value summary, and upload validation result.
 5. Review the data quality and calibration readiness panel.
-6. Click `Calibrate Model` to tune this session's planning assumptions from historical weekly demand.
-7. Compare baseline and calibrated planning outputs.
-8. Select a high-risk SKU in the priority queue.
-9. Read the planner brief and supplier risk explanation.
-10. Use the stockout timeline to compare projected inventory against replenishment ETA.
-11. Mark planner decisions as Approve, Review, or Override.
-12. Export the recommended purchase order CSV with explanation reasons and order constraints.
+6. Select a high-risk SKU in the priority queue.
+7. Read the planner brief and supplier risk explanation.
+8. Use the stockout timeline to compare projected inventory against replenishment ETA.
+9. Mark planner decisions as Approve, Review, or Override.
+10. Export the recommended purchase order CSV with explanation reasons and order constraints.
+11. Optionally open `Model & Readiness` and click `Calibrate Model` to demonstrate how historical demand can tune this session's planning assumptions.
 
 ## CSV Columns
 
@@ -56,7 +55,7 @@ The app validates file type, row count, missing required values, and historical 
 
 SupplySense AI estimates daily demand from the last 14 days of sales, calculates days of cover from available inventory, then adjusts lead time using supplier delay and risk signals. The risk score increases when demand will exhaust inventory before replenishment can arrive, when supplier reliability is low, or when the recommended reorder quantity is large.
 
-The app also calculates safety stock and target stock levels, then recommends a reorder quantity and estimated cash requirement. Recommended order quantities are adjusted for minimum order quantity, pack size, and warehouse capacity constraints. The `Calibrate Model` control uses eight weeks of historical weekly demand to estimate demand volatility and tune the safety buffer, supplier risk weight, and risk score conservatism for the current analysis session. For demo clarity, the model runs fully in the browser using JavaScript and demo CSV datasets.
+The app also calculates safety stock and target stock levels, then recommends a reorder quantity and estimated cash requirement. Recommended order quantities are adjusted for minimum order quantity, pack size, and warehouse capacity constraints. The optional `Calibrate Model` control in `Model & Readiness` uses eight weeks of historical weekly demand to estimate demand volatility and tune the safety buffer, supplier risk weight, and risk score conservatism for the current analysis session. For demo clarity, the model runs fully in the browser using JavaScript and demo CSV datasets.
 
 The data quality panel checks required CSV fields, row count, and historical demand coverage before calibration. This reflects a real deployment concern: inventory planning models are only useful when SKU, inventory, order, demand, and supplier fields are complete enough to support decision making.
 
